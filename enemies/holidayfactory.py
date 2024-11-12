@@ -5,11 +5,11 @@ from enemies.enemy import Enemy
 class HolidayFactory(ABC):
     
     @abstractmethod
-    def create_enemy_1(self) -> Enemy:
+    def create_enemy_1(x, y) -> Enemy:
         pass
     @abstractmethod
-    def create_enemy_2(self) -> Enemy:
+    def create_enemy_2(x, y) -> Enemy:
         pass
     @abstractmethod
-    def create_enemy_3(self) -> Enemy:
+    def create_enemy_3(x, y) -> Enemy:
         pass

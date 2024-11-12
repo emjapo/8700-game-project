@@ -12,11 +12,11 @@ class HalloweenFactory(HolidayFactory):
     product, while inside the method a concrete product is instantiated.
     """
 
-    def create_enemy_1(self) -> Enemy:
-        return Pumpkin()
+    def create_enemy_1(x, y) -> Enemy:
+        return Pumpkin(x, y)
 
-    def create_enemy_2(self) -> Enemy:
-        return Ghost()
+    def create_enemy_2(x, y) -> Enemy:
+        return Ghost(x, y)
 
-    def create_enemy_3(self) -> Enemy:
-        return Witch()
+    def create_enemy_3(x, y) -> Enemy:
+        return Witch(x, y)
