@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from enemies.enemy import Enemy
 
 # Abstract Factory Interface
 class HolidayFactory(ABC):

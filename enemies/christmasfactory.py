@@ -1,3 +1,9 @@
+from enemies.holidayfactory import HolidayFactory
+from enemies.enemy import Enemy
+from enemies.santa import Santa
+from enemies.present import Present
+from enemies.reindeer import Reindeer
+
 class ChristmasFactory(HolidayFactory):
     """
     Concrete Factories produce a family of products that belong to a single

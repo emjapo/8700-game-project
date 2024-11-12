@@ -1,3 +1,9 @@
+from enemies.holidayfactory import HolidayFactory
+from enemies.enemy import Enemy
+from enemies.pumpkin import Pumpkin
+from enemies.ghost import Ghost
+from enemies.witch import Witch
+
 class HalloweenFactory(HolidayFactory):
     """
     Concrete Factories produce a family of products that belong to a single

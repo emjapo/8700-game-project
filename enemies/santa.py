@@ -1,15 +1,18 @@
 import os
+import pygame
 from enemies.enemy import Enemy
 
 class Santa(Enemy):
-    image = os.path.join("../resources", "santa-enemy.png")
-    def __init__(self, image, points, x, y, color, size):
+    image_path = os.path.join("../resources", "santa-enemy.png")
+    image = pygame.image.load(image_path).convert_alpha()
+    image = pygame.transform.scale(image, (50, 50))
+    points = 10
+
+    def __init__(self, x, y, color, size):
         self.x = x
         self.y = y
         self.color = color
         self.size = size
-        self.image = image
-        self.points = points
 
     def draw(self, surface):
-        pygame.draw.circle(surface, self.color, (self.x, self.y), self.size)
+        surface.blit(self.image, (self.x, self.y))

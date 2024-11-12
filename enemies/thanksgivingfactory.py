@@ -1,3 +1,9 @@
+from enemies.holidayfactory import HolidayFactory
+from enemies.enemy import Enemy
+from enemies.turkey import Turkey
+from enemies.corn import Corn
+from enemies.macaroni import Macaroni
+
 class ThanksgivingnFactory(HolidayFactory):
     """
     Concrete Factories produce a family of products that belong to a single
