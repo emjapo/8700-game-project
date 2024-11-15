@@ -1,25 +1,33 @@
 import os
 import sys
-
 import pygame
 
+from SingletonException import SingletonException
 
 class GameManager:
-    _instance = None  # Class variable for Singleton instance
+    __instance = None  # Class variable for Singleton instance
 
-    # This will make the GameManager a singleton
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super(GameManager, cls).__new__(cls)
-        return cls._instance
+    #Uses a directive and is a simpler implementation of a singleton, must be used still in conjuntion with __init__()
+    # but does not use the __new__() modification process below.
+    @staticmethod
+    def getInstance():
+        if GameManager.__instance is None:
+            GameManager()
+        return GameManager.__instance
+
 
     #Initilize the game manager
     def __init__(self):
-        if hasattr(self, '_initialized') and self._initialized:
-            return
-        self._initialized = True
+        if GameManager.__instance != None:
+            print("GameManager init called")
+            raise SingletonException(
+                "This class is a singleton!" )
+        else:
+            GameManager.__instance = self
+            print("Creating GameManager instance")
         print("Initializing game manager")
 
+    def setup(self):
         # Pygame initialization
         pygame.init()
         self.screen = pygame.display.set_mode((800, 600))
