@@ -43,12 +43,11 @@ class GameManager:
         pygame.time.delay(3000)
 
         # Game variables
-	# Use a factory here
-
-	# made assumptions on game variables, used to save and load for Memento
-	self.level = 1
-	self.score = 0
-	self.enemy_positions = []
+        # Use a factory here
+        # made assumptions on game variables, used to save and load for Memento
+        self.level = 1
+        self.score = 0
+        self.enemy_positions = []
 
     def show_splash_screen(self):
         # Construct the file path for the image
@@ -77,13 +76,12 @@ class GameManager:
                 pygame.quit()
                 sys.exit()
             # Handle other key events if necessary
-	    
-	    # adding save and load command
-	    elif event.type = pygame.KEYDOWN:
-		if event.key == pygame.K_s: # save game clicking 'S'
-		   self.save_game()
-		elif event.type == pygame.K_l: # load game clicking 'L'
-		   self.load_game()
+            # adding save and load command
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_s: # save game clicking 'S'
+                    self.save_game()
+                elif event.type == pygame.K_l: # load game clicking 'L'
+                    self.load_game()
 
     def update(self):
         """Update game objects."""
@@ -93,23 +91,23 @@ class GameManager:
     def stop(self):
         """Stop the game loop."""
         self.running = False
-	
+
     def create_memento(self):
-	# creating memento object to save current state
-	return Memento(self.level, self.score, self.enemy_positions)
+        # creating memento object to save current state
+        return Memento(self.level, self.score, self.enemy_positions)
 
     def restore_memento(self):
-	# restores the game from memento object
-	self.level = memento.level
-	self.score = memento.score
-	self.enemy_positions = memento.enemy_positions
+        # restores the game from memento object
+        self.level = memento.level
+        self.score = memento.score
+        self.enemy_positions = memento.enemy_positions
 
     def save_game(self, file_path="savegame.dat"):
-	# saving game in binary file which library pickle uses
-	memento = self.create_memento()
-	with open(file_path, 'wb') as file:
+        # saving game in binary file which library pickle uses
+        memento = self.create_memento()
+        with open(file_path, 'wb') as file:
             pickle.dump(memento, file)
-        print("Game saved!")
+            print("Game saved!")
 
     def load_game(self, file_path="savegame.dat"):
         # load the game state from a file
