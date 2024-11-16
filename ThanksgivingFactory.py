@@ -1,4 +1,4 @@
-from enemies.holidayfactory import HolidayFactory
+from HolidayFactory import HolidayFactory
 from enemies.enemy import Enemy
 from enemies.turkey import Turkey
 from enemies.corn import Corn

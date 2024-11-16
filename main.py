@@ -12,6 +12,5 @@ if __name__ == "__main__":
         print(e.args[0])
         exit(1)
     else:
-        game_manager.setup()
         game_manager.run()
 

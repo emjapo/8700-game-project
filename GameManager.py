@@ -3,8 +3,18 @@ import sys
 import pickle # for saving and loading
 import pygame
 
+from HolidayType import HolidayType
 from SingletonException import SingletonException
+from Hero import Hero
+from HolidayFactory import HolidayFactory
+from FactorySelector import FactorySelector
 
+SCREEN_WIDTH = 750
+SCREEN_HEIGHT = 700
+OFFSET = 50
+
+GREY = (29, 29, 27)
+YELLOW = (243, 216, 63)
 class GameManager:
     __instance = None  # Class variable for Singleton instance
 
@@ -25,29 +35,38 @@ class GameManager:
                 "This class is a singleton!" )
         else:
             GameManager.__instance = self
-            print("Creating GameManager instance")
-        print("Initializing game manager")
+            #move self.setup() he # Pygame initialization
+            pygame.init()
+            self.screen = pygame.display.set_mode((SCREEN_HEIGHT, SCREEN_WIDTH))
+            #set the title at the top of the window
+            pygame.display.set_caption("Holiday Invaders")
+            # Show the splash screen
+            self.show_splash_screen()
 
-    def setup(self):
-        # Pygame initialization
-        pygame.init()
-        self.screen = pygame.display.set_mode((800, 600))
-        #set the title at the top of the window
-        pygame.display.set_caption("Holiday Invaders")
-        # Show the splash screen
-        self.show_splash_screen()
+            # Clock to control frame rate
+            self.clock = pygame.time.Clock()
+            self.running = True
+            pygame.time.delay(3000)
+            #
 
-        # Clock to control frame rate
-        self.clock = pygame.time.Clock()
-        self.running = True
-        pygame.time.delay(3000)
+            # Game variables
+            # Use a factory here
+            # made assumptions on game variables, used to save and load for Memento
+            self.level = 1
+            self.score = 0
+            self.enemy_positions = []
+            #TODO: Change hero with the factory creation
+            self.hero = Hero(SCREEN_WIDTH, SCREEN_HEIGHT)
+            self.hero_group = pygame.sprite.GroupSingle()
+            self.hero_group.add(self.hero)
 
-        # Game variables
-        # Use a factory here
-        # made assumptions on game variables, used to save and load for Memento
-        self.level = 1
-        self.score = 0
-        self.enemy_positions = []
+            #TODO:  allow for selection of holiday or random select
+            self.holiday_type = HolidayType.HALLOWEEN
+            self.holiday_factory = FactorySelector.get_factory(self.holiday_type)
+
+            self.running = True
+
+            print("Initializing game manager")
 
     def show_splash_screen(self):
         # Construct the file path for the image
@@ -58,6 +77,7 @@ class GameManager:
         # Pause for 3 seconds (3000 milliseconds)
         pygame.display.flip()
         # Pause for 3 seconds (3000 milliseconds)
+
 
 
     def run(self):
@@ -87,6 +107,9 @@ class GameManager:
         """Update game objects."""
     def render(self):
         """Update game objects."""
+        self.screen.fill(GREY)
+        self.hero_group.draw(self.screen)
+        pygame.display.update()
 
     def stop(self):
         """Stop the game loop."""
