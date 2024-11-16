@@ -7,11 +7,18 @@ class Santa(Enemy):
     points = 10
 
     def __init__(self, x, y):
+        super().__init__()
         self.x = x
         self.y = y
+        self.image = pygame.image.load(self.image_path)
+        self.rect = self.image.get_rect(topleft=(x, y))
 
     def draw(self, surface):
         image = pygame.image.load(self.image_path).convert_alpha()
         image = pygame.transform.scale(image, (50, 50))
         surface.blit(image, (self.x, self.y))
+        self.rect = image.get_rect(topleft=(self.x, self.y))
         pygame.display.flip()
+
+    def update(self, direction):
+        self.rect.x += direction
