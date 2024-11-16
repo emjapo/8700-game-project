@@ -9,9 +9,12 @@ from hero import Hero
 from holiday_factory import HolidayFactory
 from factory_selector import FactorySelector
 
+from laser import Laser
+
 SCREEN_WIDTH = 750
 SCREEN_HEIGHT = 700
 OFFSET = 50
+SPLASH_DELAY = 2000
 
 GREY = (29, 29, 27)
 YELLOW = (243, 216, 63)
@@ -43,11 +46,12 @@ class GameManager:
             pygame.display.set_caption("Holiday Invaders")
             # Show the splash screen
             self.show_splash_screen()
+            pygame.time.delay(SPLASH_DELAY)
 
             # Clock to control frame rate
             self.clock = pygame.time.Clock()
             self.running = True
-            pygame.time.delay(3000)
+            #pygame.time.delay(3000)
             #
 
             # Game variables
@@ -57,14 +61,22 @@ class GameManager:
             self.level = 1
             self.score = 0
             self.enemy_positions = []
+
+            #TODO:  allow for selection of holiday or random select
+            self.holiday_type = HolidayType.HALLOWEEN
+            self.holiday_factory = FactorySelector.get_factory(self.holiday_type)
+
             #TODO: Change hero with the factory creation
             self.hero = Hero(SCREEN_WIDTH, SCREEN_HEIGHT)
             self.hero_group = pygame.sprite.GroupSingle()
             self.hero_group.add(self.hero)
 
-            #TODO:  allow for selection of holiday or random select
-            self.holiday_type = HolidayType.HALLOWEEN
-            self.holiday_factory = FactorySelector.get_factory(self.holiday_type)
+            #TODO: Change to using the factory for creation of laser
+            #self.laser = Laser((100,100), 6, SCREEN_HEIGHT)
+            #self.laser2 = Laser((100,200), -6, SCREEN_HEIGHT)
+            #self.laser_group = pygame.sprite.Group()
+            #self.laser_group.add(self.laser)
+            #self.laser_group.add(self.laser2)
 
             self.running = True
 
@@ -76,11 +88,7 @@ class GameManager:
         splash_image = pygame.image.load(image_path)
         splash_image = pygame.transform.scale(splash_image, self.screen.get_size())  # Optionally scale to fit screen
         self.screen.blit(splash_image, (0, 0))
-        # Pause for 3 seconds (3000 milliseconds)
         pygame.display.flip()
-        # Pause for 3 seconds (3000 milliseconds)
-
-
 
     def run(self):
         """Main game loop"""
@@ -107,11 +115,18 @@ class GameManager:
 
     def update(self):
         """Update game objects."""
+        # Update the hero position
         self.hero_group.update()
+        # Update the laser position, calls lasers update()
+        #self.laser_group.update
     def render(self):
         """Update game objects."""
         self.screen.fill(GREY)
+        # Draw the hero shooter on the bottom
         self.hero_group.draw(self.screen)
+        # Draw all the lasers of the hero
+        self.hero_group.sprite.laser_group.draw(self.screen)
+
         pygame.display.update()
 
     def stop(self):

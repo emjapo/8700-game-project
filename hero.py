@@ -1,7 +1,11 @@
 import pygame
 import os
 
+from laser import Laser
+
 HERO_SPEED = 6
+
+LASER_GUN_DELAY = 300
 
 #TODO:  Make Abstract and define specific Heros per holiday
 class Hero(pygame.sprite.Sprite):
@@ -14,6 +18,10 @@ class Hero(pygame.sprite.Sprite):
         self.image = pygame.image.load(image_path).convert_alpha()
         self.rect = self.image.get_rect(midbottom = (self.screen_width/2,self.screen_height)) #middle and bottom
         self.speed = HERO_SPEED
+        self.laser_group = pygame.sprite.Group()
+        #Attributes necessary to prevent overlapping lasers
+        self.laser_gun_ready = True
+        self.laser_fired_time = 0
 
 
     def get_user_input(self):
@@ -23,6 +31,11 @@ class Hero(pygame.sprite.Sprite):
            self.rect.x -= self.speed
         elif keys[pygame.K_RIGHT]:
            self.rect.x += self.speed
+        if keys[pygame.K_SPACE] and self.laser_gun_ready:
+            self.laser_gun_ready = False
+            laser = Laser(self.rect.center, 5, self.screen_height)
+            self.laser_group.add(laser)
+            self.laser_fired_time = pygame.time.get_ticks()
 
     #Constrain the hero to the screen or it will scroll off the screen
     def constrain_movement(self):
@@ -31,6 +44,15 @@ class Hero(pygame.sprite.Sprite):
         elif self.rect.left < 0:
             self.rect.left = 0
 
+    def recharge_laser_gun(self):
+        if not self.laser_gun_ready:
+            current_time = pygame.time.get_ticks()
+            # if enough time has passed, the laser is ready
+            if ( current_time - self.laser_fired_time >= LASER_GUN_DELAY):
+                self.laser_gun_ready = True
+
     def update(self):
         self.get_user_input()
         self.constrain_movement()
+        self.laser_group.update()
+        self.recharge_laser_gun()
