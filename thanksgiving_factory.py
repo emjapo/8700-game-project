@@ -1,10 +1,10 @@
-from HolidayFactory import HolidayFactory
+from holiday_factory import HolidayFactory
 from enemies.enemy import Enemy
-from enemies.santa import Santa
-from enemies.present import Present
-from enemies.reindeer import Reindeer
+from enemies.turkey import Turkey
+from enemies.corn import Corn
+from enemies.macaroni import Macaroni
 
-class ChristmasFactory(HolidayFactory):
+class ThanksgivingFactory(HolidayFactory):
     """
     Concrete Factories produce a family of products that belong to a single
     variant. The factory guarantees that resulting products are compatible. Note
@@ -13,10 +13,10 @@ class ChristmasFactory(HolidayFactory):
     """
 
     def create_enemy_1(x, y) -> Enemy:
-        return Santa(x, y)
+        return Turkey(x, y)
 
     def create_enemy_2(x, y) -> Enemy:
-        return Present(x, y)
+        return Corn(x, y)
 
     def create_enemy_3(x, y) -> Enemy:
-        return Reindeer(x, y)
+        return Macaroni(x, y)

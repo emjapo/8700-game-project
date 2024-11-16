@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from enemies.enemy import Enemy
-from HolidayType import HolidayType
 
 # Abstract Factory Interface
 class HolidayFactory(ABC):

@@ -1,7 +1,7 @@
-from HalloweenFactory import HalloweenFactory
-from ThanksgivingFactory import ThanksgivingFactory
-from ChristmasFactory import ChristmasFactory
-from HolidayType import HolidayType
+from halloween_factory import HalloweenFactory
+from thanksgiving_factory import ThanksgivingFactory
+from christmas_factory import ChristmasFactory
+from holiday_type import HolidayType
 
 class FactorySelector:
     # Step 5: Abstract Factory Selector

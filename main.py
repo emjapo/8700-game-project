@@ -1,6 +1,6 @@
 # This is a sample Python script.
-from GameManager import GameManager
-from SingletonException import SingletonException
+from game_manager import GameManager
+from singleton_exception import SingletonException
 # Press ⌃R to execute it or replace it with your code.
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 

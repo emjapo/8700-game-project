@@ -3,11 +3,11 @@ import sys
 import pickle # for saving and loading
 import pygame
 
-from HolidayType import HolidayType
-from SingletonException import SingletonException
-from Hero import Hero
-from HolidayFactory import HolidayFactory
-from FactorySelector import FactorySelector
+from holiday_type import HolidayType
+from singleton_exception import SingletonException
+from hero import Hero
+from holiday_factory import HolidayFactory
+from factory_selector import FactorySelector
 
 SCREEN_WIDTH = 750
 SCREEN_HEIGHT = 700

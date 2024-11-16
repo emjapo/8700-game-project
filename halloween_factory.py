@@ -1,9 +1,9 @@
-from HolidayFactory import HolidayFactory
+from holiday_factory import HolidayFactory
 from enemies.enemy import Enemy
 from enemies.pumpkin import Pumpkin
 from enemies.ghost import Ghost
 from enemies.witch import Witch
-from Hero import Hero
+from hero import Hero
 
 
 class HalloweenFactory(HolidayFactory):
