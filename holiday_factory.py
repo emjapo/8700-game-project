@@ -13,3 +13,9 @@ class HolidayFactory(ABC):
     @abstractmethod
     def create_enemy_3(x, y) -> Enemy:
         pass
+    @abstractmethod
+    def create_enemy(type, x, y) -> Enemy:
+        pass
+    @abstractmethod
+    def create_hero( x, y) -> Enemy:
+        pass

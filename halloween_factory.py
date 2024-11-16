@@ -1,8 +1,10 @@
-from enemies.holidayfactory import HolidayFactory
+from holiday_factory import HolidayFactory
 from enemies.enemy import Enemy
 from enemies.pumpkin import Pumpkin
 from enemies.ghost import Ghost
 from enemies.witch import Witch
+from hero import Hero
+
 
 class HalloweenFactory(HolidayFactory):
     """
@@ -20,3 +22,14 @@ class HalloweenFactory(HolidayFactory):
 
     def create_enemy_3(x, y) -> Enemy:
         return Witch(x, y)
+
+    def create_enemy(type, x, y) -> Enemy:
+        if type == 0:
+            return Pumpkin(x, y)
+        elif type == 1:
+            return Ghost(x, y)
+        else:
+            return Witch(x, y)
+
+    def create_hero(x, y) -> Hero:
+        return Hero(x, y)

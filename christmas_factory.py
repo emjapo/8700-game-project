@@ -1,4 +1,4 @@
-from enemies.holidayfactory import HolidayFactory
+from holiday_factory import HolidayFactory
 from enemies.enemy import Enemy
 from enemies.santa import Santa
 from enemies.present import Present
