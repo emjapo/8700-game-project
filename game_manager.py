@@ -15,6 +15,7 @@ OFFSET = 50
 
 GREY = (29, 29, 27)
 YELLOW = (243, 216, 63)
+
 class GameManager:
     __instance = None  # Class variable for Singleton instance
 
@@ -37,7 +38,7 @@ class GameManager:
             GameManager.__instance = self
             #move self.setup() he # Pygame initialization
             pygame.init()
-            self.screen = pygame.display.set_mode((SCREEN_HEIGHT, SCREEN_WIDTH))
+            self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
             #set the title at the top of the window
             pygame.display.set_caption("Holiday Invaders")
             # Show the splash screen
@@ -52,6 +53,7 @@ class GameManager:
             # Game variables
             # Use a factory here
             # made assumptions on game variables, used to save and load for Memento
+            # move these below to game.py?
             self.level = 1
             self.score = 0
             self.enemy_positions = []
@@ -105,6 +107,7 @@ class GameManager:
 
     def update(self):
         """Update game objects."""
+        self.hero_group.update()
     def render(self):
         """Update game objects."""
         self.screen.fill(GREY)
