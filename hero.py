@@ -24,5 +24,13 @@ class Hero(pygame.sprite.Sprite):
         elif keys[pygame.K_RIGHT]:
            self.rect.x += self.speed
 
+    #Constrain the hero to the screen or it will scroll off the screen
+    def constrain_movement(self):
+        if self.rect.right > self.screen_width:
+            self.rect.right = self.screen_width
+        elif self.rect.left < 0:
+            self.rect.left = 0
+
     def update(self):
         self.get_user_input()
+        self.constrain_movement()
