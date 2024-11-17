@@ -169,27 +169,11 @@ class GameManager:
         if self.game.running:
             """Update game objects."""
             self.game.update()
-            #self.game.hero_group.update()
-            #self.game.move_enemies()
-            ##self.game.shoot_enemy_laser()
-            #self.game.enemy_lasers_group.update()
-            #self.game.check_for_collision()
 
     def render(self):
         """Update game objects."""
         self.screen.fill(GREY)
         # TODO add in the background for each holiday level
-        # Draw the hero shooter on the bottom
-        #self.game.hero_group.draw(self.screen)
-        # Draw all the lasers of the hero
-        #self.game.hero_group.sprite.lasers_group.draw(self.screen)
-        # self.hero_group.sprite.laser_group.draw(self.screen)
-        #for obstacle in self.game.obstacles:
-        #    obstacle.blocks_group.draw(self.screen)
-        #self.game.enemies_group.draw(self.screen)
-
-        # draw all the enemy lasers firing
-        #self.game.enemy_lasers_group.draw(self.screen)
         self.game.rendder(self.screen)
 
         pygame.display.update()
