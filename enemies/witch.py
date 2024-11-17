@@ -3,7 +3,7 @@ import pygame
 from enemies.enemy import Enemy
 
 class Witch(Enemy):
-    image_path = os.path.join("resources", "witch-enemy.png")
+    image_path = os.path.join("resources", "witch-enemy-resized.png")
     points = 1
 
     def __init__(self, x, y):

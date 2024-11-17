@@ -3,7 +3,7 @@ import pygame
 from enemies.enemy import Enemy
 
 class Ghost(Enemy):
-    image_path = os.path.join("resources", "ghost-enemy.png")
+    image_path = os.path.join("resources", "ghost-enemy-resized.png")
     points = 5
 
     def __init__(self, x, y):

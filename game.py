@@ -45,9 +45,14 @@ class Game:
     def create_enemies(self):
         for row in range(5):
             for column in range(11):
-                x = column * 55
-                y = row * 55
-                enemy = self.selected_holiday_factory.create_enemy(0, x, y)
+                x = 75 + column * 55
+                y = 110 + row * 55
+                if row == 0:
+                    enemy = self.selected_holiday_factory.create_enemy(2, x, y)
+                elif row in (1,2):
+                    enemy = self.selected_holiday_factory.create_enemy(1, x, y)
+                if row in (3,4):
+                    enemy = self.selected_holiday_factory.create_enemy(0, x, y)
                 print(f"Created enemy: {enemy}")
                 self.enemies_group.add(enemy)
 
