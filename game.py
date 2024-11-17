@@ -30,13 +30,15 @@ class Game:
         self.selected_holiday_factory.print_info()
         self.hero_group = pygame.sprite.GroupSingle() #this is like an inherent singleton
         #TODO:  make Hero a singleton and do getInstance()
-        self.hero_group.add(Hero(self.screen_width, self.screen_height))
+        self.hero = Hero(self.screen_width, self.screen_height)
+        self.hero_group.add(self.hero)
         self.obstacles = self.create_obstacles()
         self.enemies_group = pygame.sprite.Group()
         # Setup for the enemy laser firings
         self.enemy_lasers_group = pygame.sprite.Group()
         self.enemy_laser_event = pygame.USEREVENT
         pygame.time.set_timer(self.enemy_laser_event, ENEMY_LASER_FIRE_INTERVAL)
+        self.running = True;
 
         self.create_enemies()
 
@@ -75,10 +77,14 @@ class Game:
             # check if any sprite has touched the side, if so change direction
             if enemy_sprite.rect.right > self.screen_width:
                 self.enemies_direction = -1 # go left
+                # For Testing
+                # self.enemies_direction = -40 # go left
                 # TODO:  increasing this or scaling will increase the movement and difficulty
                 self.move_enemies_down(2)
             if enemy_sprite.rect.left < 0:
                 self.enemies_direction = 1 # go right
+                # For Tesging
+                #self.enemies_direction = 40 # go right
                 self.move_enemies_down(2)
 
 
@@ -118,9 +124,29 @@ class Game:
                 # check for the collision with the hero BUT do not kill() the hero, the player will have multiple lives
                 if pygame.sprite.spritecollide(laser_sprite, self.hero_group, False):
                     laser_sprite.kill()
-                    print("Hero hit")
+                    print("Hero hit by laser")
+                    self.hero.decrease_lives()
+                    if self.hero.get_number_of_lives() == 0:
+                        self.game_over()
                 # loop over the obstacles and check that the enemy lasers have hit the obstacles
                 for obstacle in self.obstacles:
                     # like above on collision remove the laser
                     if pygame.sprite.spritecollide(laser_sprite, obstacle.blocks_group, True):
                         laser_sprite.kill()
+
+        # Check for collisions between the enemies and the obstacles and hero
+        if self.enemies_group: # are there current enemies
+            for enemy in self.enemies_group:
+                for obstacle in self.obstacles:
+                    # must check against collision with each of the obstacles
+                    pygame.sprite.spritecollide(enemy, obstacle.blocks_group, True)
+                # check for collision with an enemy and the hero
+                if pygame.sprite.spritecollide(enemy, self.hero_group, False):
+                    self.hero.decrease_lives()
+                    if self.hero.get_number_of_lives() == 0:
+                        self.game_over()
+                    print("Hero hit by enemy")
+
+    def game_over(self):
+        print("Game Over!")
+        self.running = False

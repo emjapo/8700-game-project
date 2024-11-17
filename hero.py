@@ -20,6 +20,8 @@ class Hero(pygame.sprite.Sprite):
         # Attributes necessary to prevent overlapping lasers
         self.laser_gun_ready = True
         self.laser_fired_time = 0
+        # TODO: modify with private scoping via _
+        self.number_of_lives = 3
 
     def get_user_input(self):
         keys = pygame.key.get_pressed()
@@ -34,20 +36,25 @@ class Hero(pygame.sprite.Sprite):
             self.lasers_group.add(laser)
             self.laser_fired_time = pygame.time.get_ticks()
 
-    # Constrain the hero to the screen or it will scroll off the screen
+    # Constrain the hero to the screen, or it will scroll off the screen
     def constrain_movement(self):
         if self.rect.right > self.screen_width:
             self.rect.right = self.screen_width
         elif self.rect.left < 0:
             self.rect.left = 0
 
-    # Renables the the laser gun after a cooloff time to prevent a constant stream of laser bullets
+    # Renables the the laser gun after a cool-off time to prevent a constant stream of laser bullets
     def recharge_laser_gun(self):
         if not self.laser_gun_ready:
             current_time = pygame.time.get_ticks()
             # if enough time has passed, the laser is ready
             if ( current_time - self.laser_fired_time >= LASER_GUN_DELAY):
                 self.laser_gun_ready = True
+
+    def decrease_lives(self):
+        self.number_of_lives -= 1
+    def get_number_of_lives(self):
+        return self.number_of_lives
 
     def update(self):
         self.get_user_input()

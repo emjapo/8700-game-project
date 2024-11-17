@@ -61,7 +61,7 @@ class GameManager:
             print(f"Created Factory: {self.current_holiday_factory}")
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT,self.current_holiday_factory)
             # TODO: add a play button
-            self.running = True
+            self.game.running = True
 
             # Game variables
             # Use a factory here
@@ -85,16 +85,19 @@ class GameManager:
 
     def run(self):
         """Main game loop"""
-        while self.running:
+        while self.game.running:
             self.handle_events()
             self.update()
             self.render()
             self.clock.tick(60)  # 60 FPS limit
+        if self.game.running:
+            # end the timers
+            pring("Present game over screen")
 
     def handle_events(self):
         """Handle game events like keypresses and window closing."""
         for event in pygame.event.get():
-            if event.type == self.game.enemy_laser_event:
+            if event.type == self.game.enemy_laser_event and self.game.running:
                 self.game.shoot_enemy_laser()
             if event.type == pygame.QUIT:
                 self.running = False
