@@ -16,7 +16,12 @@ class GameData:
         self.high_score = GameData.load_high_score()
         print(f"Loaded score: {self.high_score}")
 
+    def decrease_lives(self):
+        self.lives -= 1
+        self.hit_sound.play()
 
+    def get_number_of_lives(self):
+        return self.number_of_lives
     @staticmethod
     def load_high_score(file_path=HIGH_SCORE_FILE):
         try:

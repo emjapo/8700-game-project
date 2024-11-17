@@ -174,7 +174,7 @@ class GameManager:
         """Update game objects."""
         self.screen.fill(GREY)
         # TODO add in the background for each holiday level
-        self.game.rendder(self.screen)
+        self.game.render(self.screen)
 
         pygame.display.update()
 
