@@ -18,6 +18,7 @@ from holiday_factory import HolidayFactory
 from laser import Laser
 
 NUM_OBSTACLES = 4
+ENEMY_LASER_FIRE_INTERVAL = 800 # 300ms between the firings of lasers from enemies, this could increase as dificulty increases
 
 class Game:
     def __init__(self, screen_width, screen_height, selected_holiday_factory):
@@ -32,7 +33,11 @@ class Game:
         self.hero_group.add(Hero(self.screen_width, self.screen_height))
         self.obstacles = self.create_obstacles()
         self.enemies_group = pygame.sprite.Group()
+        # Setup for the enemy laser firings
         self.enemy_lasers_group = pygame.sprite.Group()
+        self.enemy_laser_event = pygame.USEREVENT
+        pygame.time.set_timer(self.enemy_laser_event, ENEMY_LASER_FIRE_INTERVAL)
+
         self.create_enemies()
 
     def create_obstacles(self):
@@ -91,3 +96,31 @@ class Game:
             random_enemy = random.choice(self.enemies_group.sprites())
             laser_sprite = Laser(random_enemy.rect.center, -6, self.screen_height, "enemy")
             self.enemy_lasers_group.add(laser_sprite)
+
+    def check_for_collision(self):
+        # Hero Lasers
+        # Check if any of the "lasers" from the spaceships collided with an enemy
+        if self.hero_group.sprite.lasers_group:
+            for laser_sprite in self.hero_group.sprite.lasers_group:
+                # returns a list of all collided sprites, but by setting the doKill bool to True this will send a kill() to the sprite
+                # but you must then on having a successful collision also kill the laser fired or it will continue across the screen killing everying
+                if pygame.sprite.spritecollide(laser_sprite, self.enemies_group, True):
+                    laser_sprite.kill()
+                # loop over the obstacles
+                for obstacle in self.obstacles:
+                    # like above on collision remove the laser
+                    if pygame.sprite.spritecollide(laser_sprite, obstacle.blocks_group, True):
+                        laser_sprite.kill()
+        # Enemy Lasers
+        # if there are lasers from the enemies in the scene
+        if self.enemy_lasers_group:
+            for laser_sprite in self.enemy_lasers_group:
+                # check for the collision with the hero BUT do not kill() the hero, the player will have multiple lives
+                if pygame.sprite.spritecollide(laser_sprite, self.hero_group, False):
+                    laser_sprite.kill()
+                    print("Hero hit")
+                # loop over the obstacles and check that the enemy lasers have hit the obstacles
+                for obstacle in self.obstacles:
+                    # like above on collision remove the laser
+                    if pygame.sprite.spritecollide(laser_sprite, obstacle.blocks_group, True):
+                        laser_sprite.kill()

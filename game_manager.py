@@ -53,11 +53,14 @@ class GameManager:
 
             # Clock to control frame rate
             self.clock = pygame.time.Clock()
-            #TODO:  allow for selection of holiday or random select
+
+            # TODO:  allow for selection of holiday or random select
             self.current_holiday_type = HolidayType.HALLOWEEN
+            #self.current_holiday_type = HolidayType.THANKSGIVING
             self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
             print(f"Created Factory: {self.current_holiday_factory}")
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT,self.current_holiday_factory)
+            # TODO: add a play button
             self.running = True
 
             # Game variables
@@ -91,6 +94,8 @@ class GameManager:
     def handle_events(self):
         """Handle game events like keypresses and window closing."""
         for event in pygame.event.get():
+            if event.type == self.game.enemy_laser_event:
+                self.game.shoot_enemy_laser()
             if event.type == pygame.QUIT:
                 self.running = False
                 pygame.quit()
@@ -107,8 +112,9 @@ class GameManager:
         """Update game objects."""
         self.game.hero_group.update()
         self.game.move_enemies()
-        self.game.shoot_enemy_laser()
+        #self.game.shoot_enemy_laser()
         self.game.enemy_lasers_group.update()
+        self.game.check_for_collision()
 
     def render(self):
         """Update game objects."""
