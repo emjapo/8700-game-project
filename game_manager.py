@@ -26,7 +26,7 @@ YELLOW = (243, 216, 63)
 class GameManager:
     __instance = None  # Class variable for Singleton instance
 
-    #Uses a directive and is a simpler implementation of a singleton, must be used still in conjuntion with __init__()
+    # Uses a directive and is a simpler implementation of a singleton, must be used still in conjuntion with __init__()
     # but does not use the __new__() modification process below.
     @staticmethod
     def getInstance():
@@ -34,8 +34,7 @@ class GameManager:
             GameManager()
         return GameManager.__instance
 
-
-    #Initilize the game manager
+    # Initilize the game manager
     def __init__(self):
         if GameManager.__instance != None:
             print("GameManager init called")
@@ -43,10 +42,10 @@ class GameManager:
                 "This class is a singleton!" )
         else:
             GameManager.__instance = self
-            #move self.setup() he # Pygame initialization
+            # move self.setup() he # Pygame initialization
             pygame.init()
             self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-            #set the title at the top of the window
+            # set the title at the top of the window
             pygame.display.set_caption("Holiday Invaders")
             # Show the splash screen
             self.show_splash_screen()
@@ -57,7 +56,7 @@ class GameManager:
 
             # TODO:  allow for selection of holiday or random select
             self.current_holiday_type = HolidayType.HALLOWEEN
-            #self.current_holiday_type = HolidayType.THANKSGIVING
+            # self.current_holiday_type = HolidayType.THANKSGIVING
             self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
             print(f"Created Factory: {self.current_holiday_factory}")
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT,self.current_holiday_factory)
@@ -82,6 +81,46 @@ class GameManager:
         image_path = os.path.join('resources', 'holiday_invaders.png')
         splash_image = pygame.image.load(image_path)
         splash_image = pygame.transform.scale(splash_image, self.screen.get_size())  # Optionally scale to fit screen
+        self.screen.blit(splash_image, (0, 0))
+        pygame.display.flip()
+
+    def show_game_over_screen(self):
+        # Construct the file path for the image
+        image_path = os.path.join("resources", "game-over.png")
+        splash_image = pygame.image.load(image_path)
+        splash_image = pygame.transform.scale(
+            splash_image, self.screen.get_size()
+        )  # Optionally scale to fit screen
+        self.screen.blit(splash_image, (0, 0))
+        pygame.display.flip()
+
+    def show_halloween_background(self):
+        # Construct the file path for the image
+        image_path = os.path.join("resources", "halloween-background.png")
+        splash_image = pygame.image.load(image_path)
+        splash_image = pygame.transform.scale(
+            splash_image, self.screen.get_size()
+        )  # Optionally scale to fit screen
+        self.screen.blit(splash_image, (0, 0))
+        pygame.display.flip()
+
+    def show_thanksgiving_background(self):
+        # Construct the file path for the image
+        image_path = os.path.join("resources", "thanksgiving-background.png")
+        splash_image = pygame.image.load(image_path)
+        splash_image = pygame.transform.scale(
+            splash_image, self.screen.get_size()
+        )  # Optionally scale to fit screen
+        self.screen.blit(splash_image, (0, 0))
+        pygame.display.flip()
+
+    def show_christmas_background(self):
+        # Construct the file path for the image
+        image_path = os.path.join("resources", "christmas-background.png")
+        splash_image = pygame.image.load(image_path)
+        splash_image = pygame.transform.scale(
+            splash_image, self.screen.get_size()
+        )  # Optionally scale to fit screen
         self.screen.blit(splash_image, (0, 0))
         pygame.display.flip()
 
@@ -125,11 +164,12 @@ class GameManager:
     def render(self):
         """Update game objects."""
         self.screen.fill(GREY)
+        # TODO add in the background for each holiday level
         # Draw the hero shooter on the bottom
         self.game.hero_group.draw(self.screen)
         # Draw all the lasers of the hero
         self.game.hero_group.sprite.lasers_group.draw(self.screen)
-        #self.hero_group.sprite.laser_group.draw(self.screen)
+        # self.hero_group.sprite.laser_group.draw(self.screen)
         for obstacle in self.game.obstacles:
             obstacle.blocks_group.draw(self.screen)
         self.game.enemies_group.draw(self.screen)
@@ -169,5 +209,3 @@ class GameManager:
             memento = pickle.load(file)
         self.restore_memento(memento)
         print("Game loaded!")
-
-
