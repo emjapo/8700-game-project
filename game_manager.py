@@ -44,6 +44,7 @@ class GameManager:
             GameManager.__instance = self
             # move self.setup() he # Pygame initialization
             pygame.init()
+            pygame.mixer.init()
             self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
             # set the title at the top of the window
             pygame.display.set_caption("Holiday Invaders")
@@ -61,7 +62,7 @@ class GameManager:
             print(f"Created Factory: {self.current_holiday_factory}")
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT,self.current_holiday_factory)
             # TODO: add a play button
-            #self.game.running = True
+            # self.game.running = True
 
             # Game variables
             # Use a factory here
@@ -72,6 +73,12 @@ class GameManager:
             self.enemy_positions = []
 
             self.running = True
+
+            # init the sounds needed for winning and losing
+            sound_path = os.path.join("resources", "victory-sound.wav")
+            self.victory_sound = pygame.mixer.Sound(sound_path)
+            sound_path = os.path.join("resources", "game-over-sound.wav")
+            self.game_over_sound = pygame.mixer.Sound(sound_path)
 
             print("Game Manager Initialized")
 
@@ -132,6 +139,9 @@ class GameManager:
             self.clock.tick(60)  # 60 FPS limit
             if self.game.running == False:
                 # end the timers
+                self.game_over_sound.play(0)
+                self.show_game_over_screen()
+                pygame.time.delay(SPLASH_DELAY)
                 print("Present game over screen")
 
     def handle_events(self):

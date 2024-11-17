@@ -22,6 +22,8 @@ class Hero(pygame.sprite.Sprite):
         self.laser_fired_time = 0
         # TODO: modify with private scoping via _
         self.number_of_lives = 3
+        sound_path = os.path.join("resources", "hit-sound.wav")
+        self.hit_sound = pygame.mixer.Sound(sound_path)
 
     def get_user_input(self):
         keys = pygame.key.get_pressed()
@@ -33,6 +35,7 @@ class Hero(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE] and self.laser_gun_ready:
             self.laser_gun_ready = False
             laser = Laser(self.rect.center, 5, self.screen_height, self.holiday)
+            laser.laser_sound.play()
             self.lasers_group.add(laser)
             self.laser_fired_time = pygame.time.get_ticks()
 
@@ -53,6 +56,8 @@ class Hero(pygame.sprite.Sprite):
 
     def decrease_lives(self):
         self.number_of_lives -= 1
+        self.hit_sound.play()
+
     def get_number_of_lives(self):
         return self.number_of_lives
 
@@ -81,7 +86,7 @@ class Hero(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(
             midbottom=(self.screen_width / 2, self.screen_height)
         )  # middle and bottom
-        
+
     def makeThanksgivingHero(self):
         self.holiday = "thanksgiving"
         image_path = os.path.join("resources", "red-hero.png")
