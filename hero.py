@@ -57,7 +57,7 @@ class Hero(pygame.sprite.Sprite):
 
     def makeChristmasHero(self):
         self.holiday = "christmas"
-        image_path = os.path.join("resources", "hero.png")
+        image_path = os.path.join("resources", "green-hero.png")
         self.image = pygame.image.load(image_path).convert_alpha()
         self.rect = self.image.get_rect(
             midbottom=(self.screen_width / 2, self.screen_height)
@@ -65,7 +65,7 @@ class Hero(pygame.sprite.Sprite):
 
     def makeHalloweenHero(self):
         self.holiday = "halloween"
-        image_path = os.path.join("resources", "hero.png")
+        image_path = os.path.join("resources", "orange-hero.png")
         self.image = pygame.image.load(image_path).convert_alpha()
         self.rect = self.image.get_rect(
             midbottom=(self.screen_width / 2, self.screen_height)
@@ -73,7 +73,7 @@ class Hero(pygame.sprite.Sprite):
         
     def makeThanksgivingHero(self):
         self.holiday = "thanksgiving"
-        image_path = os.path.join("resources", "hero.png")
+        image_path = os.path.join("resources", "red-hero.png")
         self.image = pygame.image.load(image_path).convert_alpha()
         self.rect = self.image.get_rect(
             midbottom=(self.screen_width / 2, self.screen_height)
