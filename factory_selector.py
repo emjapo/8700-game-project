@@ -7,7 +7,9 @@ class FactorySelector:
     # Step 5: Abstract Factory Selector
     @staticmethod
     def get_factory(factory_type):
+        print("Factory selector")
         if factory_type == HolidayType.HALLOWEEN:
+            print("Halloween factory")
             return HalloweenFactory()
         elif factory_type == HolidayType.THANKSGIVING:
             return ThanksgivingFactory()

@@ -53,7 +53,11 @@ class GameManager:
 
             # Clock to control frame rate
             self.clock = pygame.time.Clock()
-            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
+            #TODO:  allow for selection of holiday or random select
+            self.current_holiday_type = HolidayType.HALLOWEEN
+            self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
+            print(f"Created Factory: {self.current_holiday_factory}")
+            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT,self.current_holiday_factory)
             self.running = True
 
             # Game variables
@@ -63,26 +67,6 @@ class GameManager:
             self.level = 1
             self.score = 0
             self.enemy_positions = []
-
-            #TODO:  allow for selection of holiday or random select
-            self.holiday_type = HolidayType.HALLOWEEN
-            self.holiday_factory = FactorySelector.get_factory(self.holiday_type)
-
-            #TODO: Change hero with the factory creation
-            self.hero = Hero(SCREEN_WIDTH, SCREEN_HEIGHT)
-            self.hero_group = pygame.sprite.GroupSingle()
-            self.hero_group.add(self.hero)
-
-            #TODO: Change to using the factory for creation of laser
-            #self.laser = Laser((100,100), 6, SCREEN_HEIGHT)
-            #self.laser2 = Laser((100,200), -6, SCREEN_HEIGHT)
-            #self.laser_group = pygame.sprite.Group()
-            #self.laser_group.add(self.laser)
-            #self.laser_group.add(self.laser2)
-
-            # Obstacle
-            # place 4 obstacles at the bottom of the screen
-            #self.obstacle = Obstacle()
 
             self.running = True
 
@@ -133,6 +117,7 @@ class GameManager:
         #self.hero_group.sprite.laser_group.draw(self.screen)
         for obstacle in self.game.obstacles:
             obstacle.blocks_group.draw(self.screen)
+        self.game.enemies_group.draw(self.screen)
 
         pygame.display.update()
 

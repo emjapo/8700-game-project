@@ -14,8 +14,16 @@ class HolidayFactory(ABC):
     def create_enemy_3(x, y) -> Enemy:
         pass
     @abstractmethod
-    def create_enemy(type, x, y) -> Enemy:
+    def create_enemy(self, type, x, y) -> Enemy:
         pass
     @abstractmethod
-    def create_hero( x, y) -> Enemy:
+    def create_hero(self, x, y) -> Enemy:
         pass
+
+    def print_info(self):
+        pass
+
+#TODO:  Need hero
+#TODO:  Need laser color
+#TODO:  Backgrounds
+#TODO:  Score and font color

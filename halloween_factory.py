@@ -23,13 +23,17 @@ class HalloweenFactory(HolidayFactory):
     def create_enemy_3(x, y) -> Enemy:
         return Witch(x, y)
 
-    def create_enemy(type, x, y) -> Enemy:
+    def create_enemy(self, type, x, y) -> Enemy:
+        print("Creating Halloween Enemy:")
         if type == 0:
+            print("Making pumpkin ")
             return Pumpkin(x, y)
         elif type == 1:
             return Ghost(x, y)
         else:
             return Witch(x, y)
 
-    def create_hero(x, y) -> Hero:
+    def create_hero(self, x, y) -> Hero:
         return Hero(x, y)
+def print_info(self):
+    print("I am the Halloween Factory")

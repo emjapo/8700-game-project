@@ -3,7 +3,7 @@ import pygame
 from enemies.enemy import Enemy
 
 class Pumpkin(Enemy):
-    image_path = os.path.join("resources", "pumpkin-enemy.png")
+    image_path = os.path.join("resources", "pumpkin-enemy-resized.png")
     points = 10
 
     def __init__(self, x, y):
