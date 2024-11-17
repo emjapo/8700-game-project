@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 import pygame
 
 # Abstract enemy class
@@ -11,7 +11,7 @@ class Enemy(pygame.sprite.Sprite):
     @abstractmethod
     def draw(self, surface):
         pass
-    
+
     @abstractmethod
     def update(self, direction):
         pass

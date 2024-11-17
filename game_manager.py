@@ -106,6 +106,9 @@ class GameManager:
     def update(self):
         """Update game objects."""
         self.game.hero_group.update()
+        self.game.move_enemies()
+        self.game.shoot_enemy_laser()
+        self.game.enemy_lasers_group.update()
 
     def render(self):
         """Update game objects."""
@@ -118,6 +121,9 @@ class GameManager:
         for obstacle in self.game.obstacles:
             obstacle.blocks_group.draw(self.screen)
         self.game.enemies_group.draw(self.screen)
+
+        # draw all the enemy lasers firing
+        self.game.enemy_lasers_group.draw(self.screen)
 
         pygame.display.update()
 

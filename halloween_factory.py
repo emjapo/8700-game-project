@@ -24,9 +24,8 @@ class HalloweenFactory(HolidayFactory):
         return Witch(x, y)
 
     def create_enemy(self, type, x, y) -> Enemy:
-        print("Creating Halloween Enemy:")
+        #print("Creating Halloween Enemy:")
         if type == 0:
-            print("Making pumpkin ")
             return Pumpkin(x, y)
         elif type == 1:
             return Ghost(x, y)
