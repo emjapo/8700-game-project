@@ -62,6 +62,10 @@ class Hero(pygame.sprite.Sprite):
         self.lasers_group.update()
         self.recharge_laser_gun()
 
+    def reset(self):
+        self.rect = self.image.get_rect(midbottom = (self.screen_width / 2, self.screen_height))
+        self.lasers_group.empty()
+
     def makeChristmasHero(self):
         self.holiday = "christmas"
         image_path = os.path.join("resources", "green-hero.png")

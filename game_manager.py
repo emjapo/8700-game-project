@@ -70,7 +70,6 @@ class GameManager:
             self.level = 1
             self.score = 0
             self.enemy_positions = []
-            self.data = GameData()
 
             self.running = True
 
@@ -146,36 +145,42 @@ class GameManager:
                 sys.exit()
             # Handle other key events if necessary
             # adding save and load command
-            elif event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s: # save game clicking 'S'
                     self.save_game()
                 elif event.type == pygame.K_l: # load game clicking 'L'
                     self.load_game()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and self.game.running == False:
+                    #start the game over from a reset state
+                    self.game.reset()
 
     def update(self):
         if self.game.running:
             """Update game objects."""
-            self.game.hero_group.update()
-            self.game.move_enemies()
-            #self.game.shoot_enemy_laser()
-            self.game.enemy_lasers_group.update()
-            self.game.check_for_collision()
+            self.game.update()
+            #self.game.hero_group.update()
+            #self.game.move_enemies()
+            ##self.game.shoot_enemy_laser()
+            #self.game.enemy_lasers_group.update()
+            #self.game.check_for_collision()
 
     def render(self):
         """Update game objects."""
         self.screen.fill(GREY)
         # TODO add in the background for each holiday level
         # Draw the hero shooter on the bottom
-        self.game.hero_group.draw(self.screen)
+        #self.game.hero_group.draw(self.screen)
         # Draw all the lasers of the hero
-        self.game.hero_group.sprite.lasers_group.draw(self.screen)
+        #self.game.hero_group.sprite.lasers_group.draw(self.screen)
         # self.hero_group.sprite.laser_group.draw(self.screen)
-        for obstacle in self.game.obstacles:
-            obstacle.blocks_group.draw(self.screen)
-        self.game.enemies_group.draw(self.screen)
+        #for obstacle in self.game.obstacles:
+        #    obstacle.blocks_group.draw(self.screen)
+        #self.game.enemies_group.draw(self.screen)
 
         # draw all the enemy lasers firing
-        self.game.enemy_lasers_group.draw(self.screen)
+        #self.game.enemy_lasers_group.draw(self.screen)
+        self.game.rendder(self.screen)
 
         pygame.display.update()
 

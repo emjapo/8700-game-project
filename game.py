@@ -8,7 +8,7 @@ import pdb
 import pygame
 import random
 
-
+from game_data import GameData
 import holiday_factory
 from hero import Hero
 from obstacle import Obstacle
@@ -24,6 +24,9 @@ class Game:
     def __init__(self, screen_width, screen_height, selected_holiday_factory):
         self.screen_width = screen_width
         self.screen_height = screen_height
+
+        self.data = GameData()
+
         self.enemies_direction = 1
         self.selected_holiday_factory = selected_holiday_factory
         #print(f"Provided Factory: {self.selected_holiday_factory}")
@@ -142,11 +145,43 @@ class Game:
                     pygame.sprite.spritecollide(enemy, obstacle.blocks_group, True)
                 # check for collision with an enemy and the hero
                 if pygame.sprite.spritecollide(enemy, self.hero_group, False):
+
                     self.hero.decrease_lives()
                     if self.hero.get_number_of_lives() == 0:
                         self.game_over()
                     print("Hero hit by enemy")
 
+    def update(self):
+        self.hero_group.update()
+        self.move_enemies()
+        # self.game.shoot_enemy_laser()
+        self.enemy_lasers_group.update()
+        self.check_for_collision()
+
+    def rendder(self, screen):
+        # TODO add in the background for each holiday level
+        # Draw the hero shooter on the bottom
+        self.hero_group.draw(screen)
+        # Draw all the lasers of the hero
+        self.hero_group.sprite.lasers_group.draw(screen)
+        # self.hero_group.sprite.laser_group.draw(self.screen)
+        for obstacle in self.obstacles:
+            obstacle.blocks_group.draw(screen)
+        self.enemies_group.draw(screen)
+
+        # draw all the enemy lasers firing
+        self.enemy_lasers_group.draw(screen)
+
     def game_over(self):
         print("Game Over!")
         self.running = False
+
+    def reset(self):
+        #reset game state
+        self.data.lives = 3
+        self.hero_group.sprite.reset()
+        self.enemies_group.empty()
+        self.enemy_lasers_group.empty()
+        self.create_enemies()
+        self.create_obstacles()
+        self.running = True
