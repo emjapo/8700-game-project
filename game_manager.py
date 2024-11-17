@@ -4,6 +4,7 @@ import pickle # for saving and loading
 import pygame
 
 from game import Game
+from game_data import GameData
 
 from holiday_type import HolidayType
 from singleton_exception import SingletonException
@@ -60,7 +61,7 @@ class GameManager:
             print(f"Created Factory: {self.current_holiday_factory}")
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT,self.current_holiday_factory)
             # TODO: add a play button
-            self.game.running = True
+            #self.game.running = True
 
             # Game variables
             # Use a factory here
@@ -69,6 +70,7 @@ class GameManager:
             self.level = 1
             self.score = 0
             self.enemy_positions = []
+            self.data = GameData()
 
             self.running = True
 
@@ -124,14 +126,14 @@ class GameManager:
 
     def run(self):
         """Main game loop"""
-        while self.game.running:
+        while True: #self.game.running:
             self.handle_events()
             self.update()
             self.render()
             self.clock.tick(60)  # 60 FPS limit
-        if self.game.running:
-            # end the timers
-            pring("Present game over screen")
+            if self.game.running == False:
+                # end the timers
+                print("Present game over screen")
 
     def handle_events(self):
         """Handle game events like keypresses and window closing."""
@@ -139,7 +141,7 @@ class GameManager:
             if event.type == self.game.enemy_laser_event and self.game.running:
                 self.game.shoot_enemy_laser()
             if event.type == pygame.QUIT:
-                self.running = False
+                self.game.running = False
                 pygame.quit()
                 sys.exit()
             # Handle other key events if necessary
@@ -151,12 +153,13 @@ class GameManager:
                     self.load_game()
 
     def update(self):
-        """Update game objects."""
-        self.game.hero_group.update()
-        self.game.move_enemies()
-        # self.game.shoot_enemy_laser()
-        self.game.enemy_lasers_group.update()
-        self.game.check_for_collision()
+        if self.game.running:
+            """Update game objects."""
+            self.game.hero_group.update()
+            self.game.move_enemies()
+            #self.game.shoot_enemy_laser()
+            self.game.enemy_lasers_group.update()
+            self.game.check_for_collision()
 
     def render(self):
         """Update game objects."""
