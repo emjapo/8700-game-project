@@ -89,5 +89,5 @@ class Game:
         # check for existance of enemies
         if self.enemies_group.sprites():
             random_enemy = random.choice(self.enemies_group.sprites())
-            laser_sprite = Laser(random_enemy.rect.center, -6, self.screen_height)
+            laser_sprite = Laser(random_enemy.rect.center, -6, self.screen_height, "enemy")
             self.enemy_lasers_group.add(laser_sprite)

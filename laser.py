@@ -20,12 +20,13 @@ class Laser(pygame.sprite.Sprite):
             image_path = os.path.join("resources", "candy_corn.png")
             self.image = pygame.image.load(image_path).convert_alpha()
             self.image = pygame.transform.scale(self.image, (LASER_WIDTH, LASER_HEIGHT))
-        else:
+        elif type == "thanksgiving":
             image_path = os.path.join("resources", "gravy_blob.png")
             self.image = pygame.image.load(image_path).convert_alpha()
             self.image = pygame.transform.scale(self.image, (LASER_WIDTH, LASER_HEIGHT))
-        # self.image = pygame.Surface((LASER_WIDTH, LASER_HEIGHT))
-        # self.image.fill(LASER_COLOR)
+        else:
+            self.image = pygame.Surface((4, 15))
+            self.image.fill(LASER_COLOR)
         self.rect = self.image.get_rect(center = position)
         self.speed = speed
         self.screen_height = screen_height
