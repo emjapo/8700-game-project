@@ -3,6 +3,8 @@ import sys
 import pickle # for saving and loading
 import pygame
 
+from game import Game
+
 from holiday_type import HolidayType
 from singleton_exception import SingletonException
 from hero import Hero
@@ -10,6 +12,7 @@ from holiday_factory import HolidayFactory
 from factory_selector import FactorySelector
 
 from laser import Laser
+from obstacle import Obstacle
 
 SCREEN_WIDTH = 750
 SCREEN_HEIGHT = 700
@@ -50,9 +53,8 @@ class GameManager:
 
             # Clock to control frame rate
             self.clock = pygame.time.Clock()
+            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
             self.running = True
-            #pygame.time.delay(3000)
-            #
 
             # Game variables
             # Use a factory here
@@ -78,9 +80,13 @@ class GameManager:
             #self.laser_group.add(self.laser)
             #self.laser_group.add(self.laser2)
 
+            # Obstacle
+            # place 4 obstacles at the bottom of the screen
+            #self.obstacle = Obstacle()
+
             self.running = True
 
-            print("Initializing game manager")
+            print("Game Manager Initialized")
 
     def show_splash_screen(self):
         # Construct the file path for the image
@@ -115,17 +121,18 @@ class GameManager:
 
     def update(self):
         """Update game objects."""
-        # Update the hero position
-        self.hero_group.update()
-        # Update the laser position, calls lasers update()
-        #self.laser_group.update
+        self.game.hero_group.update()
+
     def render(self):
         """Update game objects."""
         self.screen.fill(GREY)
         # Draw the hero shooter on the bottom
-        self.hero_group.draw(self.screen)
+        self.game.hero_group.draw(self.screen)
         # Draw all the lasers of the hero
-        self.hero_group.sprite.laser_group.draw(self.screen)
+        self.game.hero_group.sprite.lasers_group.draw(self.screen)
+        #self.hero_group.sprite.laser_group.draw(self.screen)
+        for obstacle in self.game.obstacles:
+            obstacle.blocks_group.draw(self.screen)
 
         pygame.display.update()
 

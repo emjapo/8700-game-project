@@ -18,7 +18,7 @@ class Hero(pygame.sprite.Sprite):
         self.image = pygame.image.load(image_path).convert_alpha()
         self.rect = self.image.get_rect(midbottom = (self.screen_width/2,self.screen_height)) #middle and bottom
         self.speed = HERO_SPEED
-        self.laser_group = pygame.sprite.Group()
+        self.lasers_group = pygame.sprite.Group()
         #Attributes necessary to prevent overlapping lasers
         self.laser_gun_ready = True
         self.laser_fired_time = 0
@@ -34,7 +34,7 @@ class Hero(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE] and self.laser_gun_ready:
             self.laser_gun_ready = False
             laser = Laser(self.rect.center, 5, self.screen_height)
-            self.laser_group.add(laser)
+            self.lasers_group.add(laser)
             self.laser_fired_time = pygame.time.get_ticks()
 
     #Constrain the hero to the screen or it will scroll off the screen
@@ -44,6 +44,7 @@ class Hero(pygame.sprite.Sprite):
         elif self.rect.left < 0:
             self.rect.left = 0
 
+    # Renables the the laser gun after a cooloff time to prevent a constant stream of laser bullets
     def recharge_laser_gun(self):
         if not self.laser_gun_ready:
             current_time = pygame.time.get_ticks()
@@ -54,5 +55,6 @@ class Hero(pygame.sprite.Sprite):
     def update(self):
         self.get_user_input()
         self.constrain_movement()
-        self.laser_group.update()
+        self.lasers_group.update()
         self.recharge_laser_gun()
+
