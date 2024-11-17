@@ -9,3 +9,13 @@ We will have an abstract factory for creating the enemies that are in the game. 
 ![UML Diagram](images/8700project.drawio.png)
 
 There will be a singleton pattern for the GameManager that will control the game operations. Making it a singleton pattern ensures that there is only one of these created.
+
+
+# Sound Attributions
+Shooting_Sounds_003.wav by jalastram -- https://freesound.org/s/362455/ -- License: Attribution 4.0
+
+Hit 1 by NearTheAtmoshphere -- https://freesound.org/s/676461/ -- License: Creative Commons 0
+
+Victory sting 5 by Victor_Natas -- https://freesound.org/s/741977/ -- License: Attribution 4.0
+
+8-bit Game Over Sound/Tune by EVRetro -- https://freesound.org/s/533034/ -- License: Creative Commons 0
