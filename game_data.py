@@ -3,7 +3,7 @@
 #Defaults Here
 DEFAULT_LIVES = 3
 DEFAULT_SCORE = 0
-DEFAULT_LEVEL = 0
+DEFAULT_LEVEL = 1
 
 HIGH_SCORE_FILE = "high_score.txt"
 
@@ -15,6 +15,8 @@ class GameData:
         self.level = level
         self.high_score = GameData.load_high_score()
         print(f"Loaded score: {self.high_score}")
+        print(f"Loaded score: {self.score}")
+        print(f"Loaded level: {self.level}")
 
     def decrease_lives(self):
         self.lives -= 1

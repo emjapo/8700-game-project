@@ -60,22 +60,20 @@ class GameManager:
             # self.current_holiday_type = HolidayType.THANKSGIVING
             self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
             print(f"Created Factory: {self.current_holiday_factory}")
-            self.font = pygame.font.SysFont('consolas', 40)
-            #self.font = pygame.font.Font("Font/monospace.ttf", 40)
-            self.level_surface = self.font.render("LEVEL 01", False, self.current_holiday_factory.get_color())
-
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET, self.current_holiday_factory)
+
             # TODO: add a play button
-            # self.game.running = True
+
+            self.font = pygame.font.SysFont('consolas', 40)
+            # self.font = pygame.font.Font("Font/monospace.ttf", 40)
+            self.level_string = f"LEVEL {self.game.get_level():02}"  # Creating the string using an f-string
+            self.level_surface = self.font.render(self.level_string, False, self.current_holiday_factory.get_color())
 
             # Game variables
             # Use a factory here
             # made assumptions on game variables, used to save and load for Memento
             # move these below to game.py?
-            self.level = 1
-            self.score = 0
             self.enemy_positions = []
-
             self.running = True
 
             # init the sounds needed for winning and losing
@@ -141,12 +139,12 @@ class GameManager:
             self.update()
             self.render()
             self.clock.tick(60)  # 60 FPS limit
-            if self.game.running == False:
-                # end the timers
-                self.game_over_sound.play(0)
-                self.show_game_over_screen()
-                pygame.time.delay(SPLASH_DELAY)
-                print("Present game over screen")
+            #if self.game.running == False:
+            #    # end the timers
+            #    self.game_over_sound.play(0)
+            #    self.show_game_over_screen()
+            #    pygame.time.delay(SPLASH_DELAY)
+            #    print("Present game over screen")
 
     def handle_events(self):
         """Handle game events like keypresses and window closing."""
@@ -165,6 +163,7 @@ class GameManager:
                 elif event.type == pygame.K_l: # load game clicking 'L'
                     self.load_game()
             if event.type == pygame.KEYDOWN:
+                # TODO:  This may need a game_over flag in addition to or in place of running to prevent an issue
                 if event.key == pygame.K_SPACE and self.game.running == False:
                     #start the game over from a reset state
                     self.game.reset()
@@ -173,6 +172,10 @@ class GameManager:
         if self.game.running:
             """Update game objects."""
             self.game.update()
+        #else:
+            #self.game_over_sound.play(0)
+            #self.show_game_over_screen()
+            #pygame.time.delay(SPLASH_DELAY)
 
     def render(self):
         # TODO add in the background for each holiday level
@@ -194,7 +197,14 @@ class GameManager:
                          (25,730),
                          (775, 730),
                          3)
+        # Put the current level in the bottom right hand corner
         self.screen.blit(self.level_surface, (570,740,50,50))
+
+        remaining_lives_x = 50 # move to the right 50 pixels
+        for life in range(self.game.get_lives()):
+            self.screen.blit(self.game.hero_group.sprite.image, (remaining_lives_x, 745))
+            remaining_lives_x += 75
+
 
         """Update game objects."""
         self.game.render(self.screen)

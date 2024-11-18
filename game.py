@@ -157,6 +157,26 @@ class Game:
                         self.game_over()
                     print("Hero hit by enemy")
 
+    def check_for_enemies(self):
+        if self.enemies_group == False:
+            # No enemies on screen, so level complete
+            # game.next_level()
+            print("No enemies")
+
+    def next_level(self):
+        # do similar to reset
+        # update lives, do we want to give some back?
+        #self.data.lives = 3
+        # Get the new holiday
+        # Hero will need to be updated to the new holiday
+        #self.hero_group.sprite.reset()
+        #self.enemies_group.empty()
+        #self.enemy_lasers_group.empty()
+        #self.create_enemies()
+        #self.create_obstacles()
+        print("Next level")
+
+
     def update(self):
         self.hero_group.update()
         self.move_enemies()
@@ -191,3 +211,12 @@ class Game:
         self.create_enemies()
         self.create_obstacles()
         self.running = True
+
+    def get_level(self):
+        return self.data.level
+
+    def get_lives(self):
+        return self.data.lives
+
+    def get_high_score(self):
+        return self.data.high_score
