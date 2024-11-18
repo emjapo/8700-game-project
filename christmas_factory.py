@@ -5,6 +5,7 @@ from enemies.present import Present
 from enemies.reindeer import Reindeer
 
 from hero import Hero
+from christmas_hero import ChristmasHero
 
 RED = (255, 0, 0)
 
@@ -33,8 +34,8 @@ class ChristmasFactory(HolidayFactory):
         else:
             return Santa(x, y)
 
-    def create_hero(self, x, y) -> Hero:
-        return Hero(x, y)
+    def create_hero(self, x, y, offset) -> Hero:
+        return ChristmasHero(x, y, offset)
 
     def get_color(self):
         return RED

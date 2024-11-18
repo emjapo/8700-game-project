@@ -14,8 +14,12 @@ class Hero(pygame.sprite.Sprite):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.offset = offset
-        # TODO: refactor the below 2 lines
-        self.makeHalloweenHero()
+        # TODO: refactor the below image and rect lines
+        image_path = os.path.join("resources", "orange-hero.png")
+        self.image = pygame.image.load(image_path).convert_alpha()
+        self.rect = self.image.get_rect(
+            midbottom=((self.screen_width + self.offset) / 2, self.screen_height)
+        )  # middle and bottom
         self.speed = HERO_SPEED
         self.lasers_group = pygame.sprite.Group()
         # Attributes necessary to prevent overlapping lasers

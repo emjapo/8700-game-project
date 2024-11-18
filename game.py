@@ -36,8 +36,8 @@ class Game:
         self.data = GameData()
 
         # Initial holiday is halloween
-        self.current_holiday_type = HolidayType.HALLOWEEN
-        #self.current_holiday_type = HolidayType.THANKSGIVING
+        #self.current_holiday_type = HolidayType.HALLOWEEN
+        self.current_holiday_type = HolidayType.THANKSGIVING
         #self.current_holiday_type = HolidayType.CHRISTMAS
         self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
         print(f"Created Factory: {self.current_holiday_factory}")
@@ -46,7 +46,8 @@ class Game:
 
         self.hero_group = pygame.sprite.GroupSingle() #this is like an inherent singleton
         #TODO:  make Hero a singleton and do getInstance()
-        self.hero = Hero(self.screen_width, self.screen_height, self.offset)
+        self.hero = self.current_holiday_factory.create_hero(self.screen_width, self.screen_height, self.offset)
+        #self.hero = Hero(self.screen_width, self.screen_height, self.offset)
         self.hero_group.add(self.hero)
         self.obstacles = self.create_obstacles()
         self.enemies_group = pygame.sprite.Group()
@@ -233,6 +234,7 @@ class Game:
 
     def game_over(self):
         print("Game Over!")
+        # TODO:  Save high score
         self.running = False
 
     def reset(self):

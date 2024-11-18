@@ -5,6 +5,7 @@ from enemies.corn import Corn
 from enemies.macaroni import Macaroni
 
 from hero import Hero
+from thanksgiving_hero import ThanksgivingHero
 
 BROWN = (139, 69, 19)
 
@@ -34,8 +35,8 @@ class ThanksgivingFactory(HolidayFactory):
         else:
             return Turkey(x, y)
 
-    def create_hero(self, x, y) -> Hero:
-        return Hero(x, y)
+    def create_hero(self, x, y, offset) -> Hero:
+        return ThanksgivingHero(x, y, offset)
 
     def get_color(self):
         return BROWN

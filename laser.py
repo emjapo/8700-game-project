@@ -1,6 +1,6 @@
 import pygame
 import os
-
+from holiday_type import HolidayType
 # yellow
 LASER_COLOR = (243, 216, 63)
 LASER_WIDTH = 10
@@ -12,15 +12,15 @@ LASER_DELAY = 300
 class Laser(pygame.sprite.Sprite):
     def __init__(self, position, speed, screen_height, type):
         super().__init__()
-        if type == "christmas":
+        if type == HolidayType.CHRISTMAS:
             image_path = os.path.join("resources", "christmas_light.png")
             self.image = pygame.image.load(image_path).convert_alpha()
             self.image = pygame.transform.scale(self.image, (LASER_WIDTH, LASER_HEIGHT))
-        elif type == "halloween":
+        elif type == HolidayType.HALLOWEEN:
             image_path = os.path.join("resources", "candy_corn.png")
             self.image = pygame.image.load(image_path).convert_alpha()
             self.image = pygame.transform.scale(self.image, (LASER_WIDTH, LASER_HEIGHT))
-        elif type == "thanksgiving":
+        elif type == HolidayType.THANKSGIVING:
             image_path = os.path.join("resources", "gravy_blob.png")
             self.image = pygame.image.load(image_path).convert_alpha()
             self.image = pygame.transform.scale(self.image, (LASER_WIDTH, LASER_HEIGHT))

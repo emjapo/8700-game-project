@@ -158,6 +158,7 @@ class GameManager:
                 self.game.shoot_enemy_laser()
             if event.type == pygame.QUIT:
                 self.game.running = False
+                # TODO:  Tell game that we are quitting, save high score
                 pygame.quit()
                 sys.exit()
             # Handle other key events if necessary

@@ -6,6 +6,7 @@ from enemies.pumpkin import Pumpkin
 from enemies.ghost import Ghost
 from enemies.witch import Witch
 from hero import Hero
+from halloween_hero import HalloweenHero
 
 ORANGE = (255, 165, 0)
 
@@ -35,8 +36,8 @@ class HalloweenFactory(HolidayFactory):
         else:
             return Pumpkin(x, y)
 
-    def create_hero(self, x, y) -> Hero:
-        return Hero(x, y)
+    def create_hero(self, x, y, offset) -> Hero:
+        return HalloweenHero(x, y, offset)
 
     def get_color(self):
         return ORANGE
