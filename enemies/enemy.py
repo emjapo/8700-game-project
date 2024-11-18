@@ -15,3 +15,8 @@ class Enemy(pygame.sprite.Sprite):
     @abstractmethod
     def update(self, direction):
         pass
+
+    @abstractmethod
+    def get_points(self):
+        pass
+

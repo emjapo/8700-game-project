@@ -5,12 +5,9 @@ import pygame
 from game import Game
 from game_data import GameData
 
-from halloween_factory import HalloweenFactory
 from holiday_type import HolidayType
 from singleton_exception import SingletonException
 from hero import Hero
-from holiday_factory import HolidayFactory
-from factory_selector import FactorySelector
 from memento import Memento
 
 from caretaker import Caretaker
@@ -23,13 +20,13 @@ SCREEN_HEIGHT = 700
 OFFSET = 50
 SPLASH_DELAY = 2000
 
-GREY = (29, 29, 27)
-YELLOW = (243, 216, 63)
+GREY = (29, 29, 27) #background
+YELLOW = (243, 216, 63) #frame
 
 class GameManager:
     __instance = None  # Class variable for Singleton instance
 
-    # Uses a directive and is a simpler implementation of a singleton, must be used still in conjuntion with __init__()
+    # Uses a directive and is a simpler implementation of a singleton, must be used still in conjunction with __init__()
     # but does not use the __new__() modification process below.
     @staticmethod
     def getInstance():
@@ -48,7 +45,7 @@ class GameManager:
             # move self.setup() he # Pygame initialization
             pygame.init()
             pygame.mixer.init()
-            self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+            self.screen = pygame.display.set_mode((SCREEN_WIDTH + OFFSET, SCREEN_HEIGHT + 2*OFFSET))
             # set the title at the top of the window
             pygame.display.set_caption("Holiday Invaders")
             # Show the splash screen
@@ -59,13 +56,20 @@ class GameManager:
             self.clock = pygame.time.Clock()
 
             # TODO:  allow for selection of holiday or random select
-            self.current_holiday_type = HolidayType.HALLOWEEN
-            # self.current_holiday_type = HolidayType.THANKSGIVING
-            self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
-            print(f"Created Factory: {self.current_holiday_factory}")
-            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT,self.current_holiday_factory)
+            # TODO: move to the Game class
+            #self.current_holiday_type = HolidayType.HALLOWEEN
+            #self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
+            #print(f"Created Factory: {self.current_holiday_factory}")
+            #self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET, self.current_holiday_factory)
+
+            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
+
             # TODO: add a play button
-            # self.game.running = True
+
+            #self.font = pygame.font.SysFont('consolas', 40)
+            # self.font = pygame.font.Font("Font/monospace.ttf", 40)
+            #self.level_string = f"LEVEL {self.game.get_level():02}"  # Creating the string using an f-string
+            #self.level_surface = self.font.render(self.level_string, False, self.game.get_theme_color())
 
             # Game variables
             # Use a factory here
@@ -76,6 +80,8 @@ class GameManager:
  
 
             self.running = True
+            # TODO:  move to GameData
+            self.enemy_positions = []
 
             # init the sounds needed for winning and losing
             sound_path = os.path.join("resources", "victory-sound.wav")
@@ -148,12 +154,12 @@ class GameManager:
                 self.show_startup_menu()         
    
             self.clock.tick(60)  # 60 FPS limit
-            if self.game.running == False:
-                # end the timers
-                self.game_over_sound.play(0)
-                self.show_game_over_screen()
-                pygame.time.delay(SPLASH_DELAY)
-                print("Present game over screen")
+            #if self.game.running == False:
+            #    # end the timers
+            #    self.game_over_sound.play(0)
+            #    self.show_game_over_screen()
+            #    pygame.time.delay(SPLASH_DELAY)
+            #    print("Present game over screen")
 
     def handle_events(self):
         """Handle game events like keypresses and window closing."""
@@ -162,6 +168,8 @@ class GameManager:
                 self.game.shoot_enemy_laser()
             if event.type == pygame.QUIT:
                 self.game.running = False
+                # TODO:  Tell game that we are quitting, save high score
+                self.game.game_over()
                 pygame.quit()
                 sys.exit()
             # Handle other key events if necessary
@@ -174,6 +182,7 @@ class GameManager:
                 if event.key == pygame.K_e:
                     self.exit_game()
             if event.type == pygame.KEYDOWN:
+                # TODO:  This may need a game_over flag in addition to or in place of running to prevent an issue
                 if event.key == pygame.K_SPACE and self.game.running == False:
                     #start the game over from a reset state
                     self.game.reset()
@@ -182,11 +191,46 @@ class GameManager:
         if self.game.running:
             """Update game objects."""
             self.game.update()
+            #self.update_level_surface()
+            #self.update_score_surface()
+        #else:
+            #self.game_over_sound.play(0)
+            #self.show_game_over_screen()
+            #pygame.time.delay(SPLASH_DELAY)
 
     def render(self):
-        """Update game objects."""
-        self.screen.fill(GREY)
         # TODO add in the background for each holiday level
+        # set background to grey
+        self.screen.fill(GREY)
+        # draw a round rect border around the window with the color of the holiday_factory
+        pygame.draw.rect(self.screen,
+                         self.game.get_theme_color(),
+                         (10,10,780,780),
+                         2,
+                         0,
+                         60,
+                         60,
+                         60,
+                         60)
+        # draw a line at the bottom of the window to separate the lives remaining
+        pygame.draw.line(self.screen,
+                         self.game.get_theme_color(),
+                         (25,730),
+                         (775, 730),
+                         3)
+        # Put the current level in the bottom right hand corner
+        #self.screen.blit(self.level_surface, (570,740,50,50))
+        self.screen.blit(self.render_level_surface(), (570,740,50,50))
+        self.screen.blit(self.render_score_label_surface(), (50,15,50,50))
+        self.screen.blit(self.render_score_surface(), (50,40,50,50))
+
+        remaining_lives_x = 50 # move to the right 50 pixels
+        for life in range(self.game.get_lives()):
+            self.screen.blit(self.game.hero_group.sprite.image, (remaining_lives_x, 745))
+            remaining_lives_x += 75
+
+
+        """Update game objects."""
         self.game.render(self.screen)
 
         pygame.display.update()
@@ -194,6 +238,24 @@ class GameManager:
     def stop(self):
         """Stop the game loop."""
         self.running = False
+
+    def render_level_surface(self):
+        font = pygame.font.SysFont('consolas', 40)
+        level_string = f"LEVEL {self.game.get_level():02}"  # Creating the string using an f-string
+        level_surface = font.render(level_string, False, self.game.get_theme_color())
+        return level_surface
+
+    def render_score_surface(self):
+        font = pygame.font.SysFont('consolas', 40)
+        score_string = str(self.game.get_score()).zfill(8)  # Creating the string using an f-string
+        score_surface = font.render(score_string, False, self.game.get_theme_color())
+        return score_surface
+
+    def render_score_label_surface(self):
+        font = pygame.font.SysFont('consolas', 40)
+        score_label_string = f"SCORE"  # Creating the string using an f-string
+        score_label_surface = font.render(score_label_string, False, self.game.get_theme_color())
+        return score_label_surface
 
     def save_game(self):
         memento = self.game.create_memento()  # Create Memento from the current game state

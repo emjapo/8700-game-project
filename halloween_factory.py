@@ -1,10 +1,14 @@
+import pygame
+
 from holiday_factory import HolidayFactory
 from enemies.enemy import Enemy
 from enemies.pumpkin import Pumpkin
 from enemies.ghost import Ghost
 from enemies.witch import Witch
 from hero import Hero
+from halloween_hero import HalloweenHero
 
+ORANGE = (255, 165, 0)
 
 class HalloweenFactory(HolidayFactory):
     """
@@ -26,15 +30,17 @@ class HalloweenFactory(HolidayFactory):
     def create_enemy(self, type, x, y) -> Enemy:
         #print("Creating Halloween Enemy:")
         if type == 0:
-            return Pumpkin(x, y)
+            return Witch(x, y)
         elif type == 1:
             return Ghost(x, y)
         else:
-            return Witch(x, y)
+            return Pumpkin(x, y)
 
-    def create_hero(self, x, y) -> Hero:
-        return Hero(x, y)
+    def create_hero(self, x, y, offset) -> Hero:
+        return HalloweenHero(x, y, offset)
+
+    def get_color(self):
+        return ORANGE
 
     def print_info(self):
         print("I am the Halloween Factory")
-

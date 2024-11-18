@@ -3,7 +3,7 @@
 #Defaults Here
 DEFAULT_LIVES = 3
 DEFAULT_SCORE = 0
-DEFAULT_LEVEL = 0
+DEFAULT_LEVEL = 1
 
 HIGH_SCORE_FILE = "high_score.txt"
 
@@ -15,6 +15,8 @@ class GameData:
         self.level = level
         self.high_score = GameData.load_high_score()
         print(f"Loaded score: {self.high_score}")
+        print(f"Loaded score: {self.score}")
+        print(f"Loaded level: {self.level}")
 
     def decrease_lives(self):
         self.lives -= 1
@@ -22,6 +24,11 @@ class GameData:
 
     def get_number_of_lives(self):
         return self.number_of_lives
+
+    def determine_high_score(self):
+        if self.score > self.high_score:
+            GameData.save_high_score(self.score)
+
     @staticmethod
     def load_high_score(file_path=HIGH_SCORE_FILE):
         try:
@@ -31,7 +38,6 @@ class GameData:
         except (FileNotFoundError, ValueError):
             GameData.save_high_score(0)
             return 0
-
 
     @staticmethod
     def save_high_score(high_score, file_path=HIGH_SCORE_FILE):

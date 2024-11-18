@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from enemies.enemy import Enemy
+from hero import Hero
 
 # Abstract Factory Interface
 class HolidayFactory(ABC):
@@ -17,7 +18,10 @@ class HolidayFactory(ABC):
     def create_enemy(self, type, x, y) -> Enemy:
         pass
     @abstractmethod
-    def create_hero(self, x, y) -> Enemy:
+    def create_hero(self, x, y, offset) -> Hero:
+        pass
+
+    def get_color(self):
         pass
 
     def print_info(self):

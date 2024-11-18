@@ -22,3 +22,5 @@ class Witch(Enemy):
 
     def update(self, direction):
         self.rect.x += direction
+    def get_points(self):
+        return self.points
