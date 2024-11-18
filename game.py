@@ -236,6 +236,7 @@ class Game:
     def game_over(self):
         print("Game Over!")
         # TODO:  Save high score
+        self.data.determine_high_score()
         self.running = False
 
     def reset(self):

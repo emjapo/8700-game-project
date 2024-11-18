@@ -24,6 +24,11 @@ class GameData:
 
     def get_number_of_lives(self):
         return self.number_of_lives
+
+    def determine_high_score(self):
+        if self.score > self.high_score:
+            GameData.save_high_score(self.score)
+
     @staticmethod
     def load_high_score(file_path=HIGH_SCORE_FILE):
         try:
@@ -33,7 +38,6 @@ class GameData:
         except (FileNotFoundError, ValueError):
             GameData.save_high_score(0)
             return 0
-
 
     @staticmethod
     def save_high_score(high_score, file_path=HIGH_SCORE_FILE):

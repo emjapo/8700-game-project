@@ -159,6 +159,7 @@ class GameManager:
             if event.type == pygame.QUIT:
                 self.game.running = False
                 # TODO:  Tell game that we are quitting, save high score
+                self.game.game_over()
                 pygame.quit()
                 sys.exit()
             # Handle other key events if necessary
