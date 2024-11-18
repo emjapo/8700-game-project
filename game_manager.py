@@ -82,8 +82,6 @@ class GameManager:
             self.game_running = True
             # TODO:  coalesce with game.running
             self.paused = False
-            selected_factory = HalloweenFactory()
-            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, selected_factory)
             self.enemy_positions = []
             # TODO:  coalesce with game.running
             self.running = True
