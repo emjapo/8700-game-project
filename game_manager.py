@@ -225,7 +225,7 @@ class GameManager:
         self.screen.blit(self.render_score_surface(), (50,40,50,50))
 
         remaining_lives_x = 50 # move to the right 50 pixels
-        for life in range(self.game.get_lives()):
+        for life in range(self.game.data.lives):
             self.screen.blit(self.game.hero_group.sprite.image, (remaining_lives_x, 745))
             remaining_lives_x += 75
 
@@ -241,13 +241,13 @@ class GameManager:
 
     def render_level_surface(self):
         font = pygame.font.SysFont('consolas', 40)
-        level_string = f"LEVEL {self.game.get_level():02}"  # Creating the string using an f-string
+        level_string = f"LEVEL {self.game.data.level:02}"  # Creating the string using an f-string
         level_surface = font.render(level_string, False, self.game.get_theme_color())
         return level_surface
 
     def render_score_surface(self):
         font = pygame.font.SysFont('consolas', 40)
-        score_string = str(self.game.get_score()).zfill(8)  # Creating the string using an f-string
+        score_string = str(self.game.data.score).zfill(8)  # Creating the string using an f-string
         score_surface = font.render(score_string, False, self.game.get_theme_color())
         return score_surface
 
