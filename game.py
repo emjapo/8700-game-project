@@ -10,29 +10,39 @@ import pygame
 import random
 
 from game_data import GameData
-import holiday_factory
+
+from holiday_type import HolidayType
+from holiday_factory import HolidayFactory
+from factory_selector import FactorySelector
+from halloween_factory import HalloweenFactory
+from thanksgiving_factory import ThanksgivingFactory
+from christmas_factory import ChristmasFactory
+
 from hero import Hero
 from obstacle import Obstacle
 from obstacle import grid
 from enemies.enemy import Enemy
-from holiday_factory import HolidayFactory
 from laser import Laser
 
 NUM_OBSTACLES = 4
 ENEMY_LASER_FIRE_INTERVAL = 800 # 300ms between the firings of lasers from enemies, this could increase as dificulty increases
 
 class Game:
-    def __init__(self, screen_width, screen_height, offset, selected_holiday_factory):
+    def __init__(self, screen_width, screen_height, offset):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.offset = offset
 
         self.data = GameData()
 
+        # Initial holiday is halloween
+        #self.current_holiday_type = HolidayType.HALLOWEEN
+        self.current_holiday_type = HolidayType.THANKSGIVING
+        self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
+        print(f"Created Factory: {self.current_holiday_factory}")
+
         self.enemies_direction = 1
-        self.selected_holiday_factory = selected_holiday_factory
-        #print(f"Provided Factory: {self.selected_holiday_factory}")
-        self.selected_holiday_factory.print_info()
+
         self.hero_group = pygame.sprite.GroupSingle() #this is like an inherent singleton
         #TODO:  make Hero a singleton and do getInstance()
         self.hero = Hero(self.screen_width, self.screen_height, self.offset)
@@ -69,7 +79,7 @@ class Game:
                     enemy_type = 1
                 else: # rows 3,4
                     enemy_type = 0
-                enemy = self.selected_holiday_factory.create_enemy(enemy_type, x + self.offset/2, y)
+                enemy = self.current_holiday_factory.create_enemy(enemy_type, x + self.offset/2, y)
                 self.enemies_group.add(enemy)
                 #print(f"Created enemy: {enemy}")
 
@@ -159,22 +169,39 @@ class Game:
                     print("Hero hit by enemy")
 
     def check_for_enemies(self):
-        if self.enemies_group == False:
-            # No enemies on screen, so level complete
-            # game.next_level()
-            print("No enemies")
+        if self.running:
+            if len(self.enemies_group) == 0:
+                print("No enemies")
+                # No enemies on screen, so level complete
+                self.running == False
+                self.next_level()
+                self.running == True
 
     def next_level(self):
         # do similar to reset
         # update lives, do we want to give some back?
         #self.data.lives = 3
         # Get the new holiday
+        print(f"Holiday Type: {self.current_holiday_type}")
+        if self.current_holiday_type == HolidayType.HALLOWEEN:
+            self.current_holiday_type = HolidayType.THANKSGIVING
+            print("Change to Thanksgiving")
+        elif self.current_holiday_type == HolidayType.THANKSGIVING:
+            self.current_holiday_type = HolidayType.CHRISTMAS
+            print("Change to Christmas")
+        elif self.current_holiday_type == HolidayType.CHRISTMAS:
+            self.current_holiday_type = HolidayType.HALLOWEEN
+            print("Change to Halloween")
+        self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
         # Hero will need to be updated to the new holiday
-        #self.hero_group.sprite.reset()
-        #self.enemies_group.empty()
-        #self.enemy_lasers_group.empty()
-        #self.create_enemies()
-        #self.create_obstacles()
+        self.hero_group.sprite.reset()
+        self.enemies_group.empty()
+        self.enemy_lasers_group.empty()
+        self.create_enemies()
+        self.create_obstacles()
+        # TODO: adjust scoring and difficulty
+        # TODO: Score could go up per level, and enemies can move faster and shoot more often
+        self.data.level += 1
         print("Next level")
 
 
@@ -184,6 +211,7 @@ class Game:
         # self.game.shoot_enemy_laser()
         self.enemy_lasers_group.update()
         self.check_for_collision()
+        self.check_for_enemies()
 
     def render(self, screen):
         # TODO add in the background for each holiday level
@@ -220,3 +248,7 @@ class Game:
 
     def get_high_score(self):
         return self.data.high_score
+
+    def get_theme_color(self):
+        return self.current_holiday_factory.get_color()
+

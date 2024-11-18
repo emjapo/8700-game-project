@@ -6,12 +6,9 @@ import pygame
 from game import Game
 from game_data import GameData
 
-from halloween_factory import HalloweenFactory
 from holiday_type import HolidayType
 from singleton_exception import SingletonException
 from hero import Hero
-from holiday_factory import HolidayFactory
-from factory_selector import FactorySelector
 from memento import Memento
 
 from laser import Laser
@@ -58,18 +55,20 @@ class GameManager:
             self.clock = pygame.time.Clock()
 
             # TODO:  allow for selection of holiday or random select
-            self.current_holiday_type = HolidayType.HALLOWEEN
-            # self.current_holiday_type = HolidayType.THANKSGIVING
-            self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
-            print(f"Created Factory: {self.current_holiday_factory}")
-            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET, self.current_holiday_factory)
+            # TODO: move to the Game class
+            #self.current_holiday_type = HolidayType.HALLOWEEN
+            #self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
+            #print(f"Created Factory: {self.current_holiday_factory}")
+            #self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET, self.current_holiday_factory)
+
+            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
 
             # TODO: add a play button
 
             self.font = pygame.font.SysFont('consolas', 40)
             # self.font = pygame.font.Font("Font/monospace.ttf", 40)
             self.level_string = f"LEVEL {self.game.get_level():02}"  # Creating the string using an f-string
-            self.level_surface = self.font.render(self.level_string, False, self.current_holiday_factory.get_color())
+            self.level_surface = self.font.render(self.level_string, False, self.game.get_theme_color())
 
             # Game variables
             self.game_running = True
@@ -191,7 +190,7 @@ class GameManager:
         self.screen.fill(GREY)
         # draw a round rect border around the window with the color of the holiday_factory
         pygame.draw.rect(self.screen,
-                         self.current_holiday_factory.get_color(),
+                         self.game.get_theme_color(),
                          (10,10,780,780),
                          2,
                          0,
@@ -201,7 +200,7 @@ class GameManager:
                          60)
         # draw a line at the bottom of the window to separate the lives remaining
         pygame.draw.line(self.screen,
-                         self.current_holiday_factory.get_color(),
+                         self.game.get_theme_color(),
                          (25,730),
                          (775, 730),
                          3)
