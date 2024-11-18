@@ -20,8 +20,8 @@ SCREEN_HEIGHT = 700
 OFFSET = 50
 SPLASH_DELAY = 2000
 
-GREY = (29, 29, 27)
-YELLOW = (243, 216, 63)
+GREY = (29, 29, 27) #background
+YELLOW = (243, 216, 63) #frame
 
 class GameManager:
     __instance = None  # Class variable for Singleton instance
@@ -45,7 +45,7 @@ class GameManager:
             # move self.setup() he # Pygame initialization
             pygame.init()
             pygame.mixer.init()
-            self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+            self.screen = pygame.display.set_mode((SCREEN_WIDTH + OFFSET, SCREEN_HEIGHT + 2*OFFSET))
             # set the title at the top of the window
             pygame.display.set_caption("Holiday Invaders")
             # Show the splash screen
@@ -60,7 +60,11 @@ class GameManager:
             # self.current_holiday_type = HolidayType.THANKSGIVING
             self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
             print(f"Created Factory: {self.current_holiday_factory}")
-            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT,self.current_holiday_factory)
+            self.font = pygame.font.SysFont('consolas', 40)
+            #self.font = pygame.font.Font("Font/monospace.ttf", 40)
+            self.level_surface = self.font.render("LEVEL 01", False, self.current_holiday_factory.get_color())
+
+            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET, self.current_holiday_factory)
             # TODO: add a play button
             # self.game.running = True
 
@@ -171,9 +175,28 @@ class GameManager:
             self.game.update()
 
     def render(self):
-        """Update game objects."""
-        self.screen.fill(GREY)
         # TODO add in the background for each holiday level
+        # set background to grey
+        self.screen.fill(GREY)
+        # draw a round rect border around the window with the color of the holiday_factory
+        pygame.draw.rect(self.screen,
+                         self.current_holiday_factory.get_color(),
+                         (10,10,780,780),
+                         2,
+                         0,
+                         60,
+                         60,
+                         60,
+                         60)
+        # draw a line at the bottom of the window to separate the lives remaining
+        pygame.draw.line(self.screen,
+                         self.current_holiday_factory.get_color(),
+                         (25,730),
+                         (775, 730),
+                         3)
+        self.screen.blit(self.level_surface, (570,740,50,50))
+
+        """Update game objects."""
         self.game.render(self.screen)
 
         pygame.display.update()

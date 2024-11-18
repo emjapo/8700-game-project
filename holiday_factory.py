@@ -20,6 +20,9 @@ class HolidayFactory(ABC):
     def create_hero(self, x, y) -> Enemy:
         pass
 
+    def get_color(self):
+        pass
+
     def print_info(self):
         pass
 

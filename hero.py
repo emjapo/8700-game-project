@@ -9,10 +9,11 @@ LASER_GUN_DELAY = 300
 
 # TODO:  Make Abstract and define specific Heros per holiday
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, screen_width, screen_height):
+    def __init__(self, screen_width, screen_height, offset):
         super().__init__()
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.offset = offset
         # TODO: refactor the below 2 lines
         self.makeHalloweenHero()
         self.speed = HERO_SPEED
@@ -21,7 +22,6 @@ class Hero(pygame.sprite.Sprite):
         self.laser_gun_ready = True
         self.laser_fired_time = 0
         # TODO: modify with private scoping via _
-        #self.number_of_lives = 3
         sound_path = os.path.join("resources", "hit-sound.wav")
         self.hit_sound = pygame.mixer.Sound(sound_path)
 
@@ -43,8 +43,8 @@ class Hero(pygame.sprite.Sprite):
     def constrain_movement(self):
         if self.rect.right > self.screen_width:
             self.rect.right = self.screen_width
-        elif self.rect.left < 0:
-            self.rect.left = 0
+        elif self.rect.left < self.offset:
+            self.rect.left = self.offset
 
     # Renables the the laser gun after a cool-off time to prevent a constant stream of laser bullets
     def recharge_laser_gun(self):
@@ -70,7 +70,7 @@ class Hero(pygame.sprite.Sprite):
         self.recharge_laser_gun()
 
     def reset(self):
-        self.rect = self.image.get_rect(midbottom = (self.screen_width / 2, self.screen_height))
+        self.rect = self.image.get_rect(midbottom = ((self.screen_width + self.offset) / 2, self.screen_height))
         self.lasers_group.empty()
 
     def makeChristmasHero(self):
@@ -78,7 +78,7 @@ class Hero(pygame.sprite.Sprite):
         image_path = os.path.join("resources", "green-hero.png")
         self.image = pygame.image.load(image_path).convert_alpha()
         self.rect = self.image.get_rect(
-            midbottom=(self.screen_width / 2, self.screen_height)
+            midbottom=((self.screen_width + self.offset) / 2, self.screen_height)
         )  # middle and bottom
 
     def makeHalloweenHero(self):
@@ -86,7 +86,7 @@ class Hero(pygame.sprite.Sprite):
         image_path = os.path.join("resources", "orange-hero.png")
         self.image = pygame.image.load(image_path).convert_alpha()
         self.rect = self.image.get_rect(
-            midbottom=(self.screen_width / 2, self.screen_height)
+            midbottom=((self.screen_width + self.offset) / 2, self.screen_height)
         )  # middle and bottom
 
     def makeThanksgivingHero(self):
@@ -94,5 +94,5 @@ class Hero(pygame.sprite.Sprite):
         image_path = os.path.join("resources", "red-hero.png")
         self.image = pygame.image.load(image_path).convert_alpha()
         self.rect = self.image.get_rect(
-            midbottom=(self.screen_width / 2, self.screen_height)
+            midbottom=((self.screen_width + self.offset) / 2, self.screen_height)
         )  # middle and bottom

@@ -1,3 +1,5 @@
+import pygame
+
 from holiday_factory import HolidayFactory
 from enemies.enemy import Enemy
 from enemies.pumpkin import Pumpkin
@@ -5,6 +7,7 @@ from enemies.ghost import Ghost
 from enemies.witch import Witch
 from hero import Hero
 
+ORANGE = (255, 165, 0)
 
 class HalloweenFactory(HolidayFactory):
     """
@@ -34,5 +37,9 @@ class HalloweenFactory(HolidayFactory):
 
     def create_hero(self, x, y) -> Hero:
         return Hero(x, y)
+
+    def get_color(self):
+        return ORANGE
+
 def print_info(self):
     print("I am the Halloween Factory")
