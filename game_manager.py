@@ -65,10 +65,10 @@ class GameManager:
 
             # TODO: add a play button
 
-            self.font = pygame.font.SysFont('consolas', 40)
+            #self.font = pygame.font.SysFont('consolas', 40)
             # self.font = pygame.font.Font("Font/monospace.ttf", 40)
-            self.level_string = f"LEVEL {self.game.get_level():02}"  # Creating the string using an f-string
-            self.level_surface = self.font.render(self.level_string, False, self.game.get_theme_color())
+            #self.level_string = f"LEVEL {self.game.get_level():02}"  # Creating the string using an f-string
+            #self.level_surface = self.font.render(self.level_string, False, self.game.get_theme_color())
 
             # Game variables
             self.game_running = True
@@ -179,6 +179,7 @@ class GameManager:
         if self.game.running:
             """Update game objects."""
             self.game.update()
+            self.upate_level_surface()
         #else:
             #self.game_over_sound.play(0)
             #self.show_game_over_screen()
@@ -205,7 +206,8 @@ class GameManager:
                          (775, 730),
                          3)
         # Put the current level in the bottom right hand corner
-        self.screen.blit(self.level_surface, (570,740,50,50))
+        #self.screen.blit(self.level_surface, (570,740,50,50))
+        self.screen.blit(self.upate_level_surface(), (570,740,50,50))
 
         remaining_lives_x = 50 # move to the right 50 pixels
         for life in range(self.game.get_lives()):
@@ -221,6 +223,12 @@ class GameManager:
     def stop(self):
         """Stop the game loop."""
         self.running = False
+
+    def upate_level_surface(self):
+        font = pygame.font.SysFont('consolas', 40)
+        level_string = f"LEVEL {self.game.get_level():02}"  # Creating the string using an f-string
+        level_surface = font.render(level_string, False, self.game.get_theme_color())
+        return level_surface
 
     def create_memento(self):
         # creating memento object to save current state
