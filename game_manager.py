@@ -6,6 +6,7 @@ from game import Game
 from game_data import GameData
 
 from holiday_type import HolidayType
+from factory_selector import FactorySelector
 from singleton_exception import SingletonException
 from hero import Hero
 from memento import Memento
@@ -57,8 +58,8 @@ class GameManager:
 
             # TODO:  allow for selection of holiday or random select
             # TODO: move to the Game class
-            #self.current_holiday_type = HolidayType.HALLOWEEN
-            #self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
+            self.current_holiday_type = HolidayType.HALLOWEEN
+            self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
             #print(f"Created Factory: {self.current_holiday_factory}")
             #self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET, self.current_holiday_factory)
 
@@ -204,7 +205,7 @@ class GameManager:
         self.screen.fill(GREY)
         # draw a round rect border around the window with the color of the holiday_factory
         pygame.draw.rect(self.screen,
-                         self.game.get_theme_color(),
+                         self.current_holiday_factory.get_color(),
                          (10,10,780,780),
                          2,
                          0,
@@ -214,7 +215,7 @@ class GameManager:
                          60)
         # draw a line at the bottom of the window to separate the lives remaining
         pygame.draw.line(self.screen,
-                         self.game.get_theme_color(),
+                         self.current_holiday_factory.get_color(),
                          (25,730),
                          (775, 730),
                          3)
@@ -242,19 +243,19 @@ class GameManager:
     def render_level_surface(self):
         font = pygame.font.SysFont('consolas', 40)
         level_string = f"LEVEL {self.game.data.level:02}"  # Creating the string using an f-string
-        level_surface = font.render(level_string, False, self.game.get_theme_color())
+        level_surface = font.render(level_string, False, self.current_holiday_factory.get_color())
         return level_surface
 
     def render_score_surface(self):
         font = pygame.font.SysFont('consolas', 40)
         score_string = str(self.game.data.score).zfill(8)  # Creating the string using an f-string
-        score_surface = font.render(score_string, False, self.game.get_theme_color())
+        score_surface = font.render(score_string, False, self.current_holiday_factory.get_color())
         return score_surface
 
     def render_score_label_surface(self):
         font = pygame.font.SysFont('consolas', 40)
         score_label_string = f"SCORE"  # Creating the string using an f-string
-        score_label_surface = font.render(score_label_string, False, self.game.get_theme_color())
+        score_label_surface = font.render(score_label_string, False, self.current_holiday_factory.get_color())
         return score_label_surface
 
     def save_game(self):
