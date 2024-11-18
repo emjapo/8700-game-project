@@ -251,6 +251,8 @@ class Game:
         self.running = True
 
     def create_memento(self):
+        self.enemy_lasers_group.empty()
+        self.hero_group.sprite.lasers_group.empty()
         state = {
             "data": {
                 "score": self.data.score,
