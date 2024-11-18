@@ -21,7 +21,7 @@ class Hero(pygame.sprite.Sprite):
         self.laser_gun_ready = True
         self.laser_fired_time = 0
         # TODO: modify with private scoping via _
-        self.number_of_lives = 3
+        #self.number_of_lives = 3
         sound_path = os.path.join("resources", "hit-sound.wav")
         self.hit_sound = pygame.mixer.Sound(sound_path)
 
@@ -57,9 +57,11 @@ class Hero(pygame.sprite.Sprite):
     def decrease_lives(self):
         self.number_of_lives -= 1
         self.hit_sound.play()
+    def hit(self):
+        self.hit_sound.play()
 
-    def get_number_of_lives(self):
-        return self.number_of_lives
+    #def get_number_of_lives(self):
+    #    return self.number_of_lives
 
     def update(self):
         self.get_user_input()

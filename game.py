@@ -128,9 +128,12 @@ class Game:
                 if pygame.sprite.spritecollide(laser_sprite, self.hero_group, False):
                     laser_sprite.kill()
                     print("Hero hit by laser")
-                    self.hero.decrease_lives()
-                    if self.hero.get_number_of_lives() == 0:
-                        self.game_over()
+                    self.hero.hit()
+                    self.data.lives -= 1
+                    #self.hero.decrease_lives()
+                    #if self.hero.get_number_of_lives() == 0:
+                    if self.data.lives == 0:
+                            self.game_over()
                 # loop over the obstacles and check that the enemy lasers have hit the obstacles
                 for obstacle in self.obstacles:
                     # like above on collision remove the laser
@@ -145,9 +148,10 @@ class Game:
                     pygame.sprite.spritecollide(enemy, obstacle.blocks_group, True)
                 # check for collision with an enemy and the hero
                 if pygame.sprite.spritecollide(enemy, self.hero_group, False):
-
-                    self.hero.decrease_lives()
-                    if self.hero.get_number_of_lives() == 0:
+                    self.hero.hit()
+                    self.data.lives -= 1
+                    #self.hero.decrease_lives()
+                    if self.data.lives == 0:
                         self.game_over()
                     print("Hero hit by enemy")
 
@@ -158,7 +162,7 @@ class Game:
         self.enemy_lasers_group.update()
         self.check_for_collision()
 
-    def rendder(self, screen):
+    def render(self, screen):
         # TODO add in the background for each holiday level
         # Draw the hero shooter on the bottom
         self.hero_group.draw(screen)
