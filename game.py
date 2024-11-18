@@ -323,27 +323,27 @@ class Game:
 
         for enemy_state in state.get('enemies', []):
       
-            if isinstance(self.selected_holiday_factory, ThanksgivingFactory):
+            if isinstance(self.current_holiday_factory, ThanksgivingFactory):
                 if enemy_state['type'] == 'Turkey':
-                    enemy = self.selected_holiday_factory.create_enemy_1(enemy_state['x'], enemy_state['y'])
+                    enemy = self.current_holiday_factory.create_enemy_1(enemy_state['x'], enemy_state['y'])
                 elif enemy_state['type'] == 'Corn':
-                    enemy = self.selected_holiday_factory.create_enemy_2(enemy_state['x'], enemy_state['y'])
+                    enemy = self.current_holiday_factory.create_enemy_2(enemy_state['x'], enemy_state['y'])
                 elif enemy_state['type'] == 'Macaroni':
-                    enemy = self.selected_holiday_factory.create_enemy_3(enemy_state['x'], enemy_state['y'])
-            elif isinstance(self.selected_holiday_factory, ChristmasFactory):
+                    enemy = self.current_holiday_factory.create_enemy_3(enemy_state['x'], enemy_state['y'])
+            elif isinstance(self.current_holiday_factory, ChristmasFactory):
                 if enemy_state['type'] == 'Santa':
-                    enemy = self.selected_holiday_factory.create_enemy_1(enemy_state['x'], enemy_state['y'])
+                    enemy = self.current_holiday_factory.create_enemy_1(enemy_state['x'], enemy_state['y'])
                 elif enemy_state['type'] == 'Present':
-                    enemy = self.selected_holiday_factory.create_enemy_2(enemy_state['x'], enemy_state['y'])
+                    enemy = self.current_holiday_factory.create_enemy_2(enemy_state['x'], enemy_state['y'])
                 elif enemy_state['type'] == 'Reindeer':
-                    enemy = self.selected_holiday_factory.create_enemy_3(enemy_state['x'], enemy_state['y'])
-            elif isinstance(self.selected_holiday_factory, HalloweenFactory):
+                    enemy = self.current_holiday_factory.create_enemy_3(enemy_state['x'], enemy_state['y'])
+            elif isinstance(self.current_holiday_factory, HalloweenFactory):
                 if enemy_state['type'] == 'Pumpkin':
-                    enemy = self.selected_holiday_factory.create_enemy_1(enemy_state['x'], enemy_state['y'])
+                    enemy = self.current_holiday_factory.create_enemy_1(enemy_state['x'], enemy_state['y'])
                 elif enemy_state['type'] == 'Ghost':
-                    enemy = self.selected_holiday_factory.create_enemy_2(enemy_state['x'], enemy_state['y'])
+                    enemy = self.current_holiday_factory.create_enemy_2(enemy_state['x'], enemy_state['y'])
                 elif enemy_state['type'] == 'Witch':
-                    enemy = self.selected_holiday_factory.create_enemy_3(enemy_state['x'], enemy_state['y'])
+                    enemy = self.current_holiday_factory.create_enemy_3(enemy_state['x'], enemy_state['y'])
             else:
                 # Handle any undefined behavior if the factory type doesn't match
                 enemy = None
