@@ -17,13 +17,13 @@ class ThanksgivingFactory(HolidayFactory):
     product, while inside the method a concrete product is instantiated.
     """
 
-    def create_enemy_1(x, y) -> Enemy:
+    def create_enemy_1(self, x, y) -> Enemy:
         return Turkey(x, y)
 
-    def create_enemy_2(x, y) -> Enemy:
+    def create_enemy_2(self, x, y) -> Enemy:
         return Corn(x, y)
 
-    def create_enemy_3(x, y) -> Enemy:
+    def create_enemy_3(self, x, y) -> Enemy:
         return Macaroni(x, y)
 
     def create_enemy(self, type, x, y) -> Enemy:

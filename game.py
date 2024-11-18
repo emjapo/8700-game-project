@@ -324,6 +324,7 @@ class Game:
             self.hero_group.sprite.lasers_group.add(laser)
 
         for enemy_state in state.get('enemies', []):
+            enemy = None
       
             if isinstance(self.current_holiday_factory, ThanksgivingFactory):
                 if enemy_state['type'] == 'Turkey':
