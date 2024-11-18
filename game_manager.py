@@ -1,6 +1,6 @@
 import os
 import sys
-import pickle # for saving and loading
+import pickle # library for saving and loading
 import pygame
 
 from game import Game
