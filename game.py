@@ -37,6 +37,8 @@ class Game:
 
         # Initial holiday is halloween
         self.current_holiday_type = HolidayType.HALLOWEEN
+        #self.current_holiday_type = HolidayType.THANKSGIVING
+        #self.current_holiday_type = HolidayType.CHRISTMAS
         self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
         print(f"Created Factory: {self.current_holiday_factory}")
 
@@ -125,7 +127,10 @@ class Game:
             for laser_sprite in self.hero_group.sprite.lasers_group:
                 # returns a list of all collided sprites, but by setting the doKill bool to True this will send a kill() to the sprite
                 # but you must then on having a successful collision also kill the laser fired or it will continue across the screen killing everying
-                if pygame.sprite.spritecollide(laser_sprite, self.enemies_group, True):
+                enemies_hit = pygame.sprite.spritecollide(laser_sprite, self.enemies_group, True)
+                if enemies_hit:
+                    for enemy in enemies_hit:
+                        self.data.score += enemy.get_points()
                     laser_sprite.kill()
                 # loop over the obstacles
                 for obstacle in self.obstacles:
@@ -239,6 +244,7 @@ class Game:
         self.create_enemies()
         self.create_obstacles()
         self.running = True
+        self.data.score = 0
     def get_level(self):
         return self.data.level
 
@@ -247,7 +253,10 @@ class Game:
 
     def get_high_score(self):
         return self.data.high_score
+    def get_score(self):
+        return self.data.score
 
     def get_theme_color(self):
         return self.current_holiday_factory.get_color()
+
 

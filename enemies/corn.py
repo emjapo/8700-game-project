@@ -11,6 +11,7 @@ class Corn(Enemy):
         self.x = x
         self.y = y
         self.image = pygame.image.load(self.image_path)
+        self.image = pygame.transform.scale(self.image, (40,40))
         self.rect = self.image.get_rect(topleft=(x, y))
 
     def draw(self, surface):
@@ -22,3 +23,5 @@ class Corn(Enemy):
 
     def update(self, direction):
         self.rect.x += direction
+    def get_points(self):
+        return self.points
