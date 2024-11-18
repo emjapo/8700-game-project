@@ -1,6 +1,5 @@
 import os
 import sys
-import pickle # library for saving and loading
 import pygame
 
 from game import Game
@@ -13,6 +12,8 @@ from hero import Hero
 from holiday_factory import HolidayFactory
 from factory_selector import FactorySelector
 from memento import Memento
+
+from caretaker import Caretaker
 
 from laser import Laser
 from obstacle import Obstacle
@@ -70,14 +71,9 @@ class GameManager:
             # Use a factory here
             # made assumptions on game variables, used to save and load for Memento
             # move these below to game.py?
-            self.level = 1
-            self.score = 0
-            self.hero_lives = 3
-            self.enemy_positions = []
-            self.game_running = True
-            self.paused = False
-            selected_factory = HalloweenFactory()
-            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, selected_factory)
+            self.caretaker = Caretaker()
+            #self.game_state = { "level": 1, "score": 0, "player_position": (0,0) }
+ 
 
             self.running = True
 
@@ -139,12 +135,18 @@ class GameManager:
 
     def run(self):
         """Main game loop"""
+        self.show_startup_menu()
+	
         while True: #self.game.running:
             self.handle_events()
-            if not self.paused:
-               self.update()
-
+            self.update()
             self.render()
+   
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_s]:
+                self.save_game()
+                self.show_startup_menu()         
+   
             self.clock.tick(60)  # 60 FPS limit
             if self.game.running == False:
                 # end the timers
@@ -167,10 +169,10 @@ class GameManager:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s: # save game clicking 'S'
                     self.save_game()
-                    self.paused = True
                 if event.key == pygame.K_l: # load game clicking 'L'
                     self.load_game()
-                    self.paused = False
+                if event.key == pygame.K_e:
+                    self.exit_game()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and self.game.running == False:
                     #start the game over from a reset state
@@ -193,31 +195,52 @@ class GameManager:
         """Stop the game loop."""
         self.running = False
 
-    def create_memento(self):
-        # creating memento object to save current state
-        return Memento(self.level, self.score, self.enemy_positions, self.hero_lives)
-
-    def restore_memento(self):
-        # restores the game from memento object
-        self.level = memento.level
-        self.score = memento.score
-        self.enemy_positions = memento.enemy_positions
-        self.hero_lives = memento.hero_lives
-        print(f"Game restored from Memento: {memento}")
-
     def save_game(self):
-        memento = self.create_memento()  # Create Memento from the current game state
-        self.saved_memento = memento    # Store it in the GameManager
+        memento = self.game.create_memento()  # Create Memento from the current game state
+        self.caretaker.save_memento(memento)    # save file using caretaker
         print("Game saved!")
 
     def load_game(self):
-        if self.saved_memento:  # Assuming saved_memento holds the Memento object
-           memento = self.saved_memento  # Get the saved state
-           self.level = memento.level
-           self.score = memento.score
-           self.enemy_positions = memento.enemy_positions
-           self.hero_lives = memento.hero_lives
-
-           print("Game loaded!")
+        memento = self.caretaker.load_memento()  # restore the saved Memento
+        if memento:
+            print("Loading saved game state.")
+            self.game.restore_from_memento(memento)  # restore the game state from Memento
+            self.game.running = True
         else:
-           print("No saved game found.")
+            print("No saved game state found.")
+
+    def exit_game(self):
+        print("Exiting game...")
+        self.save_game()
+        pygame.quit()
+        sys.exit()
+
+    def show_startup_menu(self):
+        # temporary screen for start up menu
+        font = pygame.font.Font(None, 40)
+        new_game_text = font.render("Press N for New Game", True, (255, 255, 0))
+        load_game_text = font.render("Press L to Load Game", True, (255, 255, 0))
+        exit_game_text = font.render("Press E to Exit Game", True, (255, 255, 0))
+        self.screen.fill((128, 128, 128))
+        self.screen.blit(new_game_text, (400, 200))
+        self.screen.blit(load_game_text, (400, 300))
+        self.screen.blit(exit_game_text, (400, 400))
+        pygame.display.flip()
+	
+        waiting_for_input = True
+        while waiting_for_input:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_n:  # Start New Game
+                        waiting_for_input = False
+                        print("Starting new game...")
+                    elif event.key == pygame.K_l:  # Load Saved Game
+                        waiting_for_input = False
+                        self.load_game()  # Load the saved game state from file
+                    elif event.key == pygame.K_e:  # Exit the game
+                        waiting_for_input = False
+                        self.exit_game()
+

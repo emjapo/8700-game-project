@@ -16,7 +16,11 @@ from obstacle import Obstacle
 from obstacle import grid
 from enemies.enemy import Enemy
 from holiday_factory import HolidayFactory
+from thanksgiving_factory import ThanksgivingFactory
+from christmas_factory import ChristmasFactory
+from halloween_factory import HalloweenFactory
 from laser import Laser
+from memento import Memento
 
 NUM_OBSTACLES = 4
 ENEMY_LASER_FIRE_INTERVAL = 800 # 300ms between the firings of lasers from enemies, this could increase as dificulty increases
@@ -189,4 +193,128 @@ class Game:
         self.enemy_lasers_group.empty()
         self.create_enemies()
         self.create_obstacles()
+        self.running = True
+
+    def create_memento(self):
+        state = {
+            "data": {
+                "score": self.data.score,
+                "lives": self.data.lives,
+                "level": self.data.level
+            },
+            "hero": {
+                "x": self.hero.rect.x,
+                "y": self.hero.rect.y,
+                "lasers": [
+                    {"x": laser.rect.x, "y": laser.rect.y} 
+                    for laser in self.hero_group.sprite.lasers_group
+                ]
+            },
+            "enemies": [
+                {
+                    "type": enemy.__class__.__name__,
+                    "x": enemy.rect.x, 
+                    "y": enemy.rect.y
+                }   
+                for enemy in self.enemies_group
+            ],
+            "enemy_lasers": [
+                {"x": laser.rect.x, "y": laser.rect.y} 
+                for laser in self.enemy_lasers_group
+            ],
+            "obstacles": [
+                {
+                    "x": obstacle.blocks_group.sprites()[0].rect.x,
+                    "y": obstacle.blocks_group.sprites()[0].rect.y,
+                    "blocks": [
+                        {
+                            "x": block.rect.x, 
+                            "y": block.rect.y,
+                            "width": block.rect.width,
+                            "height": block.rect.height,
+                            "color": tuple(block.image.get_at((0,0)))
+                        } 
+                        for block in obstacle.blocks_group
+                    ]
+                } 
+                for obstacle in self.obstacles
+            ]
+        }
+        return Memento(state)
+
+    def restore_from_memento(self, memento):
+        self.enemies_group.empty()
+        self.hero_group.sprite.lasers_group.empty()
+        self.enemy_lasers_group.empty()
+        self.obstacles.clear()
+
+        state = memento.get_state()
+        self.data.score = state["data"]["score"]
+        self.data.lives = state["data"]["lives"]
+        self.data.level = state["data"]["level"]
+
+        hero_state = state.get('hero', {})
+        self.hero.rect.x = hero_state.get('x', self.hero.rect.x)
+        self.hero.rect.y = hero_state.get('y', self.hero.rect.y)
+
+        for laser_state in hero_state.get('lasers', []):
+            laser = Laser(
+                (laser_state['x'], laser_state['y']), 
+                -6, 
+                self.screen_height, 
+                "hero"
+            )
+            self.hero_group.sprite.lasers_group.add(laser)
+
+        for enemy_state in state.get('enemies', []):
+      
+            if isinstance(self.selected_holiday_factory, ThanksgivingFactory):
+                if enemy_state['type'] == 'Turkey':
+                    enemy = self.selected_holiday_factory.create_enemy_1(enemy_state['x'], enemy_state['y'])
+                elif enemy_state['type'] == 'Corn':
+                    enemy = self.selected_holiday_factory.create_enemy_2(enemy_state['x'], enemy_state['y'])
+                elif enemy_state['type'] == 'Macaroni':
+                    enemy = self.selected_holiday_factory.create_enemy_3(enemy_state['x'], enemy_state['y'])
+            elif isinstance(self.selected_holiday_factory, ChristmasFactory):
+                if enemy_state['type'] == 'Santa':
+                    enemy = self.selected_holiday_factory.create_enemy_1(enemy_state['x'], enemy_state['y'])
+                elif enemy_state['type'] == 'Present':
+                    enemy = self.selected_holiday_factory.create_enemy_2(enemy_state['x'], enemy_state['y'])
+                elif enemy_state['type'] == 'Reindeer':
+                    enemy = self.selected_holiday_factory.create_enemy_3(enemy_state['x'], enemy_state['y'])
+            elif isinstance(self.selected_holiday_factory, HalloweenFactory):
+                if enemy_state['type'] == 'Pumpkin':
+                    enemy = self.selected_holiday_factory.create_enemy_1(enemy_state['x'], enemy_state['y'])
+                elif enemy_state['type'] == 'Ghost':
+                    enemy = self.selected_holiday_factory.create_enemy_2(enemy_state['x'], enemy_state['y'])
+                elif enemy_state['type'] == 'Witch':
+                    enemy = self.selected_holiday_factory.create_enemy_3(enemy_state['x'], enemy_state['y'])
+            else:
+                # Handle any undefined behavior if the factory type doesn't match
+                enemy = None
+
+            if enemy:
+                self.enemies_group.add(enemy)
+
+        for laser_state in state.get('enemy_lasers', []):
+            laser = Laser(
+                (laser_state['x'], laser_state['y']), 
+                6, 
+                self.screen_height, 
+                "enemy"
+            )
+            self.enemy_lasers_group.add(laser)
+
+
+        for obstacle_state in state.get('obstacles', []):
+            obstacle = Obstacle(obstacle_state['x'], obstacle_state['y'])
+            # Recreate individual blocks
+            for block_state in obstacle_state.get('blocks', []):
+                block = pygame.sprite.Sprite()
+                block.rect = pygame.Rect(block_state['x'], block_state['y'], block_state['width'], block_state['height'])
+                block.image = pygame.Surface((block.rect.width, block.rect.height))
+                block.image.fill(pygame.Color(*block_state['color']))
+                obstacle.blocks_group.add(block)
+            self.obstacles.append(obstacle)
+
         self.running = True
