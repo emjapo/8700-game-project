@@ -1,4 +1,4 @@
-# CPSC 8700
+# CPS 8700
 # Project
 #
 # game.py
@@ -373,3 +373,14 @@ class Game:
             self.obstacles.append(obstacle)
 
         self.running = True
+
+    def get_theme_color(self):
+        """Returns a theme color based on the current holiday type."""
+        if self.current_holiday_type == HolidayType.HALLOWEEN:
+            return pygame.Color(255, 140, 0)  # Orange for Halloween
+        elif self.current_holiday_type == HolidayType.THANKSGIVING:
+            return pygame.Color(255, 69, 0)  # Dark orange for Thanksgiving
+        elif self.current_holiday_type == HolidayType.CHRISTMAS:
+            return pygame.Color(0, 255, 0)  # Green for Christmas
+        else:
+            return pygame.Color(255, 255, 255)  # Default to white if no holiday matches
