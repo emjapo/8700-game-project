@@ -22,8 +22,8 @@ SCREEN_HEIGHT = 700
 OFFSET = 50
 SPLASH_DELAY = 2000
 
-GREY = (29, 29, 27)
-YELLOW = (243, 216, 63)
+GREY = (29, 29, 27) #background
+YELLOW = (243, 216, 63) #frame
 
 class GameManager:
     __instance = None  # Class variable for Singleton instance
@@ -47,7 +47,7 @@ class GameManager:
             # move self.setup() he # Pygame initialization
             pygame.init()
             pygame.mixer.init()
-            self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+            self.screen = pygame.display.set_mode((SCREEN_WIDTH + OFFSET, SCREEN_HEIGHT + 2*OFFSET))
             # set the title at the top of the window
             pygame.display.set_caption("Holiday Invaders")
             # Show the splash screen
@@ -62,9 +62,14 @@ class GameManager:
             # self.current_holiday_type = HolidayType.THANKSGIVING
             self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
             print(f"Created Factory: {self.current_holiday_factory}")
-            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT,self.current_holiday_factory)
+            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET, self.current_holiday_factory)
+
             # TODO: add a play button
-            # self.game.running = True
+
+            self.font = pygame.font.SysFont('consolas', 40)
+            # self.font = pygame.font.Font("Font/monospace.ttf", 40)
+            self.level_string = f"LEVEL {self.game.get_level():02}"  # Creating the string using an f-string
+            self.level_surface = self.font.render(self.level_string, False, self.current_holiday_factory.get_color())
 
             # Game variables
             # Use a factory here
@@ -75,10 +80,12 @@ class GameManager:
             self.hero_lives = 3
             self.enemy_positions = []
             self.game_running = True
+            # TODO:  coalesce with game.running
             self.paused = False
             selected_factory = HalloweenFactory()
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, selected_factory)
-
+            self.enemy_positions = []
+            # TODO:  coalesce with game.running
             self.running = True
 
             # init the sounds needed for winning and losing
@@ -141,17 +148,18 @@ class GameManager:
         """Main game loop"""
         while True: #self.game.running:
             self.handle_events()
+            # TODO: undertand distinction between game.running and game.paused
             if not self.paused:
                self.update()
 
             self.render()
             self.clock.tick(60)  # 60 FPS limit
-            if self.game.running == False:
-                # end the timers
-                self.game_over_sound.play(0)
-                self.show_game_over_screen()
-                pygame.time.delay(SPLASH_DELAY)
-                print("Present game over screen")
+            #if self.game.running == False:
+            #    # end the timers
+            #    self.game_over_sound.play(0)
+            #    self.show_game_over_screen()
+            #    pygame.time.delay(SPLASH_DELAY)
+            #    print("Present game over screen")
 
     def handle_events(self):
         """Handle game events like keypresses and window closing."""
@@ -172,6 +180,7 @@ class GameManager:
                     self.load_game()
                     self.paused = False
             if event.type == pygame.KEYDOWN:
+                # TODO:  This may need a game_over flag in addition to or in place of running to prevent an issue
                 if event.key == pygame.K_SPACE and self.game.running == False:
                     #start the game over from a reset state
                     self.game.reset()
@@ -180,11 +189,41 @@ class GameManager:
         if self.game.running:
             """Update game objects."""
             self.game.update()
+        #else:
+            #self.game_over_sound.play(0)
+            #self.show_game_over_screen()
+            #pygame.time.delay(SPLASH_DELAY)
 
     def render(self):
-        """Update game objects."""
-        self.screen.fill(GREY)
         # TODO add in the background for each holiday level
+        # set background to grey
+        self.screen.fill(GREY)
+        # draw a round rect border around the window with the color of the holiday_factory
+        pygame.draw.rect(self.screen,
+                         self.current_holiday_factory.get_color(),
+                         (10,10,780,780),
+                         2,
+                         0,
+                         60,
+                         60,
+                         60,
+                         60)
+        # draw a line at the bottom of the window to separate the lives remaining
+        pygame.draw.line(self.screen,
+                         self.current_holiday_factory.get_color(),
+                         (25,730),
+                         (775, 730),
+                         3)
+        # Put the current level in the bottom right hand corner
+        self.screen.blit(self.level_surface, (570,740,50,50))
+
+        remaining_lives_x = 50 # move to the right 50 pixels
+        for life in range(self.game.get_lives()):
+            self.screen.blit(self.game.hero_group.sprite.image, (remaining_lives_x, 745))
+            remaining_lives_x += 75
+
+
+        """Update game objects."""
         self.game.render(self.screen)
 
         pygame.display.update()

@@ -22,9 +22,10 @@ NUM_OBSTACLES = 4
 ENEMY_LASER_FIRE_INTERVAL = 800 # 300ms between the firings of lasers from enemies, this could increase as dificulty increases
 
 class Game:
-    def __init__(self, screen_width, screen_height, selected_holiday_factory):
+    def __init__(self, screen_width, screen_height, offset, selected_holiday_factory):
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.offset = offset
 
         self.data = GameData()
 
@@ -34,7 +35,7 @@ class Game:
         self.selected_holiday_factory.print_info()
         self.hero_group = pygame.sprite.GroupSingle() #this is like an inherent singleton
         #TODO:  make Hero a singleton and do getInstance()
-        self.hero = Hero(self.screen_width, self.screen_height)
+        self.hero = Hero(self.screen_width, self.screen_height, self.offset)
         self.hero_group.add(self.hero)
         self.obstacles = self.create_obstacles()
         self.enemies_group = pygame.sprite.Group()
@@ -49,7 +50,7 @@ class Game:
     def create_obstacles(self):
         # Want 4 obstacles
         obstacle_width = len(grid[0]) * 3 #TODO:  change 3 to Obstacle width
-        obstacle_spacing = (self.screen_width - (NUM_OBSTACLES * obstacle_width)) / 5
+        obstacle_spacing = (self.screen_width + self.offset - (NUM_OBSTACLES * obstacle_width)) / (NUM_OBSTACLES+1)
         obstacles = []
         for i in range(4):
             offset_x = (i + 1) * obstacle_spacing + i * obstacle_width
@@ -63,11 +64,12 @@ class Game:
                 x = 75 + column * 55
                 y = 110 + row * 55
                 if row == 0:
-                    enemy = self.selected_holiday_factory.create_enemy(2, x, y)
+                    enemy_type = 2
                 elif row in (1,2):
-                    enemy = self.selected_holiday_factory.create_enemy(1, x, y)
-                if row in (3,4):
-                    enemy = self.selected_holiday_factory.create_enemy(0, x, y)
+                    enemy_type = 1
+                else: # rows 3,4
+                    enemy_type = 0
+                enemy = self.selected_holiday_factory.create_enemy(enemy_type, x + self.offset/2, y)
                 self.enemies_group.add(enemy)
                 #print(f"Created enemy: {enemy}")
 
@@ -79,13 +81,13 @@ class Game:
         enemy_sprites = self.enemies_group.sprites()
         for enemy_sprite in enemy_sprites:
             # check if any sprite has touched the side, if so change direction
-            if enemy_sprite.rect.right > self.screen_width:
+            if enemy_sprite.rect.right > self.screen_width + (self.offset/2):
                 self.enemies_direction = -1 # go left
                 # For Testing
                 # self.enemies_direction = -40 # go left
                 # TODO:  increasing this or scaling will increase the movement and difficulty
                 self.move_enemies_down(2)
-            if enemy_sprite.rect.left < 0:
+            if enemy_sprite.rect.left < self.offset / 2:
                 self.enemies_direction = 1 # go right
                 # For Tesging
                 #self.enemies_direction = 40 # go right
@@ -156,6 +158,26 @@ class Game:
                         self.game_over()
                     print("Hero hit by enemy")
 
+    def check_for_enemies(self):
+        if self.enemies_group == False:
+            # No enemies on screen, so level complete
+            # game.next_level()
+            print("No enemies")
+
+    def next_level(self):
+        # do similar to reset
+        # update lives, do we want to give some back?
+        #self.data.lives = 3
+        # Get the new holiday
+        # Hero will need to be updated to the new holiday
+        #self.hero_group.sprite.reset()
+        #self.enemies_group.empty()
+        #self.enemy_lasers_group.empty()
+        #self.create_enemies()
+        #self.create_obstacles()
+        print("Next level")
+
+
     def update(self):
         self.hero_group.update()
         self.move_enemies()
@@ -190,3 +212,11 @@ class Game:
         self.create_enemies()
         self.create_obstacles()
         self.running = True
+    def get_level(self):
+        return self.data.level
+
+    def get_lives(self):
+        return self.data.lives
+
+    def get_high_score(self):
+        return self.data.high_score
