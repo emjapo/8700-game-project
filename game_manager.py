@@ -6,11 +6,13 @@ import pygame
 from game import Game
 from game_data import GameData
 
+from halloween_factory import HalloweenFactory
 from holiday_type import HolidayType
 from singleton_exception import SingletonException
 from hero import Hero
 from holiday_factory import HolidayFactory
 from factory_selector import FactorySelector
+from memento import Memento
 
 from laser import Laser
 from obstacle import Obstacle
@@ -70,7 +72,12 @@ class GameManager:
             # move these below to game.py?
             self.level = 1
             self.score = 0
+            self.hero_lives = 3
             self.enemy_positions = []
+            self.game_running = True
+            self.paused = False
+            selected_factory = HalloweenFactory()
+            self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, selected_factory)
 
             self.running = True
 
@@ -134,7 +141,9 @@ class GameManager:
         """Main game loop"""
         while True: #self.game.running:
             self.handle_events()
-            self.update()
+            if not self.paused:
+               self.update()
+
             self.render()
             self.clock.tick(60)  # 60 FPS limit
             if self.game.running == False:
@@ -158,8 +167,10 @@ class GameManager:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s: # save game clicking 'S'
                     self.save_game()
-                elif event.type == pygame.K_l: # load game clicking 'L'
+                    self.paused = True
+                if event.key == pygame.K_l: # load game clicking 'L'
                     self.load_game()
+                    self.paused = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and self.game.running == False:
                     #start the game over from a reset state
@@ -200,27 +211,29 @@ class GameManager:
 
     def create_memento(self):
         # creating memento object to save current state
-        return Memento(self.level, self.score, self.enemy_positions)
+        return Memento(self.level, self.score, self.enemy_positions, self.hero_lives)
 
     def restore_memento(self):
         # restores the game from memento object
         self.level = memento.level
         self.score = memento.score
         self.enemy_positions = memento.enemy_positions
+        self.hero_lives = memento.hero_lives
+        print(f"Game restored from Memento: {memento}")
 
-    def save_game(self, file_path="savegame.dat"):
-        # saving game in binary file which library pickle uses
-        memento = self.create_memento()
-        with open(file_path, 'wb') as file:
-            pickle.dump(memento, file)
-            print("Game saved!")
+    def save_game(self):
+        memento = self.create_memento()  # Create Memento from the current game state
+        self.saved_memento = memento    # Store it in the GameManager
+        print("Game saved!")
 
-    def load_game(self, file_path="savegame.dat"):
-        # load the game state from a file
-        if not os.path.exists(file_path):
-            print("No save file found.")
-            return
-        with open(file_path, 'rb') as file:
-            memento = pickle.load(file)
-        self.restore_memento(memento)
-        print("Game loaded!")
+    def load_game(self):
+        if self.saved_memento:  # Assuming saved_memento holds the Memento object
+           memento = self.saved_memento  # Get the saved state
+           self.level = memento.level
+           self.score = memento.score
+           self.enemy_positions = memento.enemy_positions
+           self.hero_lives = memento.hero_lives
+
+           print("Game loaded!")
+        else:
+           print("No saved game found.")
