@@ -48,28 +48,11 @@ class GameManager:
             self.screen = pygame.display.set_mode((SCREEN_WIDTH + OFFSET, SCREEN_HEIGHT + 2*OFFSET))
             # set the title at the top of the window
             pygame.display.set_caption("Holiday Invaders")
-            # Show the splash screen
-            self.show_splash_screen()
-            pygame.time.delay(SPLASH_DELAY)
 
             # Clock to control frame rate
             self.clock = pygame.time.Clock()
 
-            # TODO:  allow for selection of holiday or random select
-            # TODO: move to the Game class
-            #self.current_holiday_type = HolidayType.HALLOWEEN
-            #self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
-            #print(f"Created Factory: {self.current_holiday_factory}")
-            #self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET, self.current_holiday_factory)
-
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
-
-            # TODO: add a play button
-
-            #self.font = pygame.font.SysFont('consolas', 40)
-            # self.font = pygame.font.Font("Font/monospace.ttf", 40)
-            #self.level_string = f"LEVEL {self.game.get_level():02}"  # Creating the string using an f-string
-            #self.level_surface = self.font.render(self.level_string, False, self.game.get_theme_color())
 
             # Game variables
             # Use a factory here
@@ -77,11 +60,11 @@ class GameManager:
             # move these below to game.py?
             self.caretaker = Caretaker()
             #self.game_state = { "level": 1, "score": 0, "player_position": (0,0) }
- 
 
-            self.running = True
+            # TODO: move to elsewhere
+            #self.running = True
             # TODO:  move to GameData
-            self.enemy_positions = []
+            #self.enemy_positions = []
 
             # init the sounds needed for winning and losing
             sound_path = os.path.join("resources", "victory-sound.wav")
@@ -140,26 +123,33 @@ class GameManager:
         pygame.display.flip()
 
     def run(self):
-        """Main game loop"""
-        self.show_startup_menu()
-	
-        while True: #self.game.running:
-            self.handle_events()
-            self.update()
-            self.render()
+
+        self.show_splash_screen()
+        pygame.time.delay(SPLASH_DELAY)
+        while True:
+            # Show the splash screen
+            self.show_startup_menu()
+
+            """Main game loop"""
+            #while True:
+            while self.game.running:
+                self.handle_events()
+                self.update()
+                self.render()
+
+                # TODO:  Should this move to handle_events()?
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_s]:
+                    self.save_game()
+                    self.show_startup_menu()
    
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_s]:
-                self.save_game()
-                self.show_startup_menu()         
-   
-            self.clock.tick(60)  # 60 FPS limit
-            #if self.game.running == False:
-            #    # end the timers
-            #    self.game_over_sound.play(0)
-            #    self.show_game_over_screen()
-            #    pygame.time.delay(SPLASH_DELAY)
-            #    print("Present game over screen")
+                self.clock.tick(60)  # 60 FPS limit
+                #if self.game.running == False:
+                #    # end the timers
+            self.game_over_sound.play(0)
+            self.show_game_over_screen()
+            while pygame.mixer.get_busy():
+                pygame.time.delay(100)
 
     def handle_events(self):
         """Handle game events like keypresses and window closing."""
@@ -299,6 +289,7 @@ class GameManager:
                     if event.key == pygame.K_n:  # Start New Game
                         waiting_for_input = False
                         print("Starting new game...")
+                        self.game.start()
                     elif event.key == pygame.K_l:  # Load Saved Game
                         waiting_for_input = False
                         self.load_game()  # Load the saved game state from file

@@ -57,9 +57,16 @@ class Game:
         self.enemy_lasers_group = pygame.sprite.Group()
         self.enemy_laser_event = pygame.USEREVENT
         pygame.time.set_timer(self.enemy_laser_event, ENEMY_LASER_FIRE_INTERVAL)
+        # TODO:  moved to start() and also staring in the game selection window in GameManager
         self.running = True;
 
         self.create_enemies()
+
+    def start(self):
+        self.running = True
+
+    def stop(self):
+        self.running = False
 
     def create_obstacles(self):
         # Want 4 obstacles
