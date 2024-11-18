@@ -36,8 +36,9 @@ class Game:
         self.data = GameData()
 
         # Initial holiday is halloween
-        #self.current_holiday_type = HolidayType.HALLOWEEN
-        self.current_holiday_type = HolidayType.THANKSGIVING
+        self.current_holiday_type = HolidayType.HALLOWEEN
+        # these are for testing and not playing all levels
+        #self.current_holiday_type = HolidayType.THANKSGIVING
         #self.current_holiday_type = HolidayType.CHRISTMAS
         self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
         print(f"Created Factory: {self.current_holiday_factory}")
