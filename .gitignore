@@ -1,2 +1,5 @@
 __pycache__
 high_score.txt
+saved_game.json
+savedgame.dat
+saved_game.pkl
