@@ -72,19 +72,12 @@ class GameManager:
             self.level_surface = self.font.render(self.level_string, False, self.current_holiday_factory.get_color())
 
             # Game variables
-            # Use a factory here
-            # made assumptions on game variables, used to save and load for Memento
-            # move these below to game.py?
-            self.level = 1
-            self.score = 0
-            self.hero_lives = 3
-            self.enemy_positions = []
             self.game_running = True
             # TODO:  coalesce with game.running
             self.paused = False
-            self.enemy_positions = []
-            # TODO:  coalesce with game.running
             self.running = True
+            # TODO:  move to GameData
+            self.enemy_positions = []
 
             # init the sounds needed for winning and losing
             sound_path = os.path.join("resources", "victory-sound.wav")
