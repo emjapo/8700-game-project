@@ -83,7 +83,7 @@ class Game:
         obstacles = []
         for i in range(4):
             offset_x = (i + 1) * obstacle_spacing + i * obstacle_width
-            obstacle = Obstacle(offset_x, self.screen_height - 100)
+            obstacle = Obstacle(offset_x, self.screen_height - 100, self.current_holiday_type) #TODO: allow this to change type
             obstacles.append(obstacle)
         return obstacles
 
@@ -395,7 +395,7 @@ class Game:
 
 
         for obstacle_state in state.get('obstacles', []):
-            obstacle = Obstacle(obstacle_state['x'], obstacle_state['y'])
+            obstacle = Obstacle(obstacle_state['x'], obstacle_state['y'], self.current_holiday_type)
             # Recreate individual blocks
             for block_state in obstacle_state.get('blocks', []):
                 block = pygame.sprite.Sprite()
