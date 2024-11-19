@@ -257,13 +257,13 @@ class GameManager:
         button_color_quit=(0,0,0)
         
         button_rect1 = pygame.Rect(
-            SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 20, 200, 60
+            SCREEN_WIDTH // 2 - 300, SCREEN_HEIGHT // 2 + 160, 200, 60
         )
         button_rect2 = pygame.Rect(
-            SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 60, 200, 60
+            SCREEN_WIDTH // 2 - 90, SCREEN_HEIGHT // 2 + 160, 200, 60
         )
         button_rect3 = pygame.Rect(
-            SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 140, 200, 60
+            SCREEN_WIDTH // 2 + 120 , SCREEN_HEIGHT // 2 + 160, 200, 60
         )
         mouse_pos = pygame.mouse.get_pos()
         self.draw_button(button_rect1, "Start Game", button_color_start)
