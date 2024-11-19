@@ -55,7 +55,7 @@ class GameManager:
 
             self.current_holiday_type = HolidayType.HALLOWEEN
             self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
-            #print(f"Created Factory: {self.current_holiday_factory}")
+            # print(f"Created Factory: {self.current_holiday_factory}")
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
 
             # Game variables
@@ -63,12 +63,12 @@ class GameManager:
             # made assumptions on game variables, used to save and load for Memento
             # move these below to game.py?
             self.caretaker = Caretaker()
-            #self.game_state = { "level": 1, "score": 0, "player_position": (0,0) }
+            # self.game_state = { "level": 1, "score": 0, "player_position": (0,0) }
 
             # TODO: move to elsewhere
-            #self.running = True
+            # self.running = True
             # TODO:  move to GameData
-            #self.enemy_positions = []
+            # self.enemy_positions = []
 
             # init the sounds needed for winning and losing
             sound_path = os.path.join("resources", "victory-sound.wav")
@@ -135,7 +135,7 @@ class GameManager:
             self.show_startup_menu()
 
             """Main game loop"""
-            #while True:
+            # while True:
             while self.game.running:
                 self.handle_events()
                 self.update()
@@ -146,9 +146,9 @@ class GameManager:
                 if keys[pygame.K_s]:
                     self.save_game()
                     self.show_startup_menu()
-   
+
                 self.clock.tick(60)  # 60 FPS limit
-                #if self.game.running == False:
+                # if self.game.running == False:
                 #    # end the timers
             self.game_over_sound.play(0)
             self.show_game_over_screen()
@@ -178,19 +178,19 @@ class GameManager:
             if event.type == pygame.KEYDOWN:
                 # TODO:  This may need a game_over flag in addition to or in place of running to prevent an issue
                 if event.key == pygame.K_SPACE and self.game.running == False:
-                    #start the game over from a reset state
+                    # start the game over from a reset state
                     self.game.reset()
 
     def update(self):
         if self.game.running:
             """Update game objects."""
             self.game.update()
-            #self.update_level_surface()
-            #self.update_score_surface()
-        #else:
-            #self.game_over_sound.play(0)
-            #self.show_game_over_screen()
-            #pygame.time.delay(SPLASH_DELAY)
+            # self.update_level_surface()
+            # self.update_score_surface()
+        # else:
+        # self.game_over_sound.play(0)
+        # self.show_game_over_screen()
+        # pygame.time.delay(SPLASH_DELAY)
 
     def render(self):
         # TODO add in the background for each holiday level
@@ -213,7 +213,7 @@ class GameManager:
                          (775, 730),
                          3)
         # Put the current level in the bottom right hand corner
-        #self.screen.blit(self.level_surface, (570,740,50,50))
+        # self.screen.blit(self.level_surface, (570,740,50,50))
         self.screen.blit(self.render_level_surface(), (570,740,50,50))
         self.screen.blit(self.render_score_label_surface(), (50,15,50,50))
         self.screen.blit(self.render_score_surface(), (50,40,50,50))
@@ -222,7 +222,6 @@ class GameManager:
         for life in range(self.game.data.lives):
             self.screen.blit(self.game.hero_group.sprite.image, (remaining_lives_x, 745))
             remaining_lives_x += 75
-
 
         """Update game objects."""
         self.game.render(self.screen)
@@ -271,33 +270,48 @@ class GameManager:
         pygame.quit()
         sys.exit()
 
-    def show_startup_menu(self):
-        # temporary screen for start up menu
+    def draw_button(self, rect, text, color):
         font = pygame.font.Font(None, 40)
-        new_game_text = font.render("Press N for New Game", True, (255, 255, 0))
-        load_game_text = font.render("Press L to Load Game", True, (255, 255, 0))
-        exit_game_text = font.render("Press E to Exit Game", True, (255, 255, 0))
-        self.screen.fill((128, 128, 128))
-        self.screen.blit(new_game_text, (400, 200))
-        self.screen.blit(load_game_text, (400, 300))
-        self.screen.blit(exit_game_text, (400, 400))
+        pygame.draw.rect(self.screen, color, rect)
+        text_surface = font.render(text, True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=rect.center)
+        self.screen.blit(text_surface, text_rect)
+
+    def show_startup_menu(self):
+        
+        button_color_start = (30, 111, 80)
+        button_color_load= (87, 28, 39)
+        button_color_quit=(0,0,0)
+        
+        button_rect1 = pygame.Rect(
+            SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 20, 200, 60
+        )
+        button_rect2 = pygame.Rect(
+            SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 60, 200, 60
+        )
+        button_rect3 = pygame.Rect(
+            SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 140, 200, 60
+        )
+        mouse_pos = pygame.mouse.get_pos()
+        self.draw_button(button_rect1, "Start Game", button_color_start)
+        self.draw_button(button_rect2, "Load Game", button_color_load)
+        self.draw_button(button_rect3, "Exit Game", button_color_quit)
         pygame.display.flip()
-	
+
         waiting_for_input = True
         while waiting_for_input:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_n:  # Start New Game
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if button_rect1.collidepoint(event.pos):
                         waiting_for_input = False
                         print("Starting new game...")
                         self.game.start()
-                    elif event.key == pygame.K_l:  # Load Saved Game
+                    elif button_rect2.collidepoint(event.pos):
                         waiting_for_input = False
                         self.load_game()  # Load the saved game state from file
-                    elif event.key == pygame.K_e:  # Exit the game
+                    elif button_rect3.collidepoint(event.pos):
                         waiting_for_input = False
                         self.exit_game()
-
