@@ -1,3 +1,8 @@
+# CPSC 8700
+# Fall 2024
+# Project
+#
+
 # This is a sample Python script.
 from game_manager import GameManager
 from singleton_exception import SingletonException

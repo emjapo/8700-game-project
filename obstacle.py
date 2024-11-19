@@ -1,3 +1,9 @@
+# CPSC 8700
+# Fall 2024
+# Project
+# Derived from https://github.com/educ8s/Python-Space-Invaders-Game-with-Pygame/tree/main
+#
+
 import pygame
 from pygame.examples import grid
 

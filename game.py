@@ -1,5 +1,7 @@
-# CPS 8700
+# CPSC 8700
+# Fall 2024
 # Project
+# Derived from https://github.com/educ8s/Python-Space-Invaders-Game-with-Pygame/tree/main
 #
 # game.py
 # contains came state, logic, and all elements

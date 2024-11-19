@@ -19,3 +19,11 @@ Hit 1 by NearTheAtmoshphere -- https://freesound.org/s/676461/ -- License: Creat
 Victory sting 5 by Victor_Natas -- https://freesound.org/s/741977/ -- License: Attribution 4.0
 
 8-bit Game Over Sound/Tune by EVRetro -- https://freesound.org/s/533034/ -- License: Creative Commons 0
+
+# Code Attributions
+
+Pygame Tutorial with SpaceInvaders
+https://github.com/educ8s/Python-Space-Invaders-Game-with-Pygame/blob/main/README.md
+
+Python Crash Course
+https://learning.oreilly.com/library/view/python-crash-course/9781098156664/
