@@ -20,6 +20,12 @@ Victory sting 5 by Victor_Natas -- https://freesound.org/s/741977/ -- License: A
 
 8-bit Game Over Sound/Tune by EVRetro -- https://freesound.org/s/533034/ -- License: Creative Commons 0
 
+turkey gobble 03.wav by klankbeeld -- https://freesound.org/s/608325/ -- License: Attribution 4.0
+
+Sleigh Bells Sound Effect by GowlerMusic -- https://freesound.org/s/265458/ -- License: Attribution 4.0
+
+HalloweenGhost.wav by sound_system11 -- https://freesound.org/s/591511/ -- License: Attribution 4.0
+
 # Code Attributions
 
 Pygame Tutorial with SpaceInvaders
