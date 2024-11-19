@@ -29,6 +29,11 @@ class GameData:
         if self.score > self.high_score:
             GameData.save_high_score(self.score)
 
+    def update_score(self, score):
+        self.score += score
+        if self.score > self.high_score:
+            self.high_score = self.score
+
     @staticmethod
     def load_high_score(file_path=HIGH_SCORE_FILE):
         try:

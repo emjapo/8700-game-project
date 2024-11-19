@@ -22,7 +22,8 @@ OFFSET = 50
 SPLASH_DELAY = 2000
 
 GREY = (29, 29, 27) #background
-YELLOW = (243, 216, 63) #frame
+YELLOW = (255, 255, 0)
+#YELLOW = (243, 216, 63) #frame
 
 class GameManager:
     __instance = None  # Class variable for Singleton instance
@@ -181,9 +182,11 @@ class GameManager:
                          3)
         # Put the current level in the bottom right hand corner
         #self.screen.blit(self.level_surface, (570,740,50,50))
-        self.screen.blit(self.render_level_surface(), (570,740,50,50))
-        self.screen.blit(self.render_score_label_surface(), (50,15,50,50))
-        self.screen.blit(self.render_score_surface(), (50,40,50,50))
+        self.screen.blit(self.level_surface(), (570,740,50,50))
+        self.screen.blit(self.score_label_surface(), (50,15,50,50))
+        self.screen.blit(self.score_surface(), (50,40,50,50))
+        self.screen.blit(self.highscore_label_surface(), (540, 15, 50, 50))
+        self.screen.blit(self.highscore_surface(), (540, 40, 50, 50))
 
         remaining_lives_x = 50 # move to the right 50 pixels
         for life in range(self.game.data.lives):
@@ -200,23 +203,37 @@ class GameManager:
         """Stop the game loop."""
         self.running = False
 
-    def render_level_surface(self):
+    def level_surface(self):
         font = pygame.font.SysFont('consolas', 40)
         level_string = f"LEVEL {self.game.data.level:02}"  # Creating the string using an f-string
         level_surface = font.render(level_string, False, self.current_holiday_factory.get_color())
         return level_surface
 
-    def render_score_surface(self):
+    def score_surface(self):
         font = pygame.font.SysFont('consolas', 40)
         score_string = str(self.game.data.score).zfill(8)  # Creating the string using an f-string
         score_surface = font.render(score_string, False, self.current_holiday_factory.get_color())
         return score_surface
 
-    def render_score_label_surface(self):
+    def score_label_surface(self):
         font = pygame.font.SysFont('consolas', 40)
         score_label_string = f"SCORE"  # Creating the string using an f-string
         score_label_surface = font.render(score_label_string, False, self.current_holiday_factory.get_color())
         return score_label_surface
+
+    def highscore_surface(self):
+        font = pygame.font.SysFont('consolas', 40)
+        highscore_string = str(self.game.data.high_score).zfill(8)  # Creating the string using an f-string
+        highscore_surface = font.render(highscore_string, False, self.current_holiday_factory.get_color())
+        return highscore_surface
+
+    def highscore_label_surface(self):
+        font = pygame.font.SysFont('consolas', 40)
+        highscore_label_string = f"HIGHSCORE"  # Creating the string using an f-string
+        highscore_label_surface = font.render(highscore_label_string, False,
+                                  self.current_holiday_factory.get_color())
+        return highscore_label_surface
+
 
     def save_game(self):
         memento = self.game.create_memento()  # Create Memento from the current game state
@@ -240,14 +257,14 @@ class GameManager:
 
     def show_startup_menu(self):
         # temporary screen for start up menu
-        font = pygame.font.Font(None, 40)
-        new_game_text = font.render("Press N for New Game", True, (255, 255, 0))
-        load_game_text = font.render("Press L to Load Game", True, (255, 255, 0))
-        exit_game_text = font.render("Press E to Exit Game", True, (255, 255, 0))
+        font = pygame.font.SysFont('consolas', 40)
+        new_game_text = font.render("Press N for New Game", True, YELLOW)#(255, 255, 0))
+        load_game_text = font.render("Press L to Load Game", True, YELLOW) #(255, 255, 0))
+        exit_game_text = font.render("Press E to Exit Game", True, YELLOW)#(255, 255, 0))
         self.screen.fill((128, 128, 128))
-        self.screen.blit(new_game_text, (400, 200))
-        self.screen.blit(load_game_text, (400, 300))
-        self.screen.blit(exit_game_text, (400, 400))
+        self.screen.blit(new_game_text, (300, 200))
+        self.screen.blit(load_game_text, (300, 300))
+        self.screen.blit(exit_game_text, (300, 400))
         pygame.display.flip()
 	
         waiting_for_input = True

@@ -134,7 +134,7 @@ class Game:
 
     def check_for_collision(self):
         # Hero Lasers
-        # Check if any of the "lasers" from the spaceships collided with an enemy
+        # Check if any of the "lasers" from the hero collided with an enemy
         if self.hero_group.sprite.lasers_group:
             for laser_sprite in self.hero_group.sprite.lasers_group:
                 # returns a list of all collided sprites, but by setting the doKill bool to True this will send a kill() to the sprite
@@ -142,7 +142,8 @@ class Game:
                 enemies_hit = pygame.sprite.spritecollide(laser_sprite, self.enemies_group, True)
                 if enemies_hit:
                     for enemy in enemies_hit:
-                        self.data.score += enemy.get_points()
+                        self.data.update_score(enemy.get_points())
+                        #self.data.score += enemy.get_points()
                     laser_sprite.kill()
                 # loop over the obstacles
                 for obstacle in self.obstacles:
@@ -392,35 +393,35 @@ class Game:
 
         self.running = True
 
-    def show_halloween_background(self):
-        # Construct the file path for the image
-        image_path = os.path.join("resources", "halloween-background.png")
-        splash_image = pygame.image.load(image_path)
-        splash_image = pygame.transform.scale(
-            splash_image, self.screen.get_size()
-        )  # Optionally scale to fit screen
-        self.screen.blit(splash_image, (0, 0))
-        pygame.display.flip()
+    #def show_halloween_background(self):
+    #    # Construct the file path for the image
+    #    image_path = os.path.join("resources", "halloween-background.png")
+    #    splash_image = pygame.image.load(image_path)
+    #    splash_image = pygame.transform.scale(
+    #        splash_image, self.screen.get_size()
+    #    )  # Optionally scale to fit screen
+    #    self.screen.blit(splash_image, (0, 0))
+    #    pygame.display.flip()
 
-    def show_thanksgiving_background(self):
-        # Construct the file path for the image
-        image_path = os.path.join("resources", "thanksgiving-background.png")
-        splash_image = pygame.image.load(image_path)
-        splash_image = pygame.transform.scale(
-            splash_image, self.screen.get_size()
-        )  # Optionally scale to fit screen
-        self.screen.blit(splash_image, (0, 0))
-        pygame.display.flip()
+    #def show_thanksgiving_background(self):
+    #    # Construct the file path for the image
+    #    image_path = os.path.join("resources", "thanksgiving-background.png")
+    #    splash_image = pygame.image.load(image_path)
+    #    splash_image = pygame.transform.scale(
+    #        splash_image, self.screen.get_size()
+    #    )  # Optionally scale to fit screen
+    #    self.screen.blit(splash_image, (0, 0))
+    #    pygame.display.flip()
 
-    def show_christmas_background(self):
-        # Construct the file path for the image
-        image_path = os.path.join("resources", "christmas-background.png")
-        splash_image = pygame.image.load(image_path)
-        splash_image = pygame.transform.scale(
-            splash_image, self.screen.get_size()
-        )  # Optionally scale to fit screen
-        self.screen.blit(splash_image, (0, 0))
-        pygame.display.flip()
+    #def show_christmas_background(self):
+    #    # Construct the file path for the image
+    #    image_path = os.path.join("resources", "christmas-background.png")
+    #    splash_image = pygame.image.load(image_path)
+    #    splash_image = pygame.transform.scale(
+    #        splash_image, self.screen.get_size()
+    #    )  # Optionally scale to fit screen
+    #    self.screen.blit(splash_image, (0, 0))
+    #    pygame.display.flip()
 
     def get_background(self):
         return self.current_holiday_factory.get_background()
