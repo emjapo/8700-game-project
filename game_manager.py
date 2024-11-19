@@ -57,13 +57,13 @@ class GameManager:
             self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
             # print(f"Created Factory: {self.current_holiday_factory}")
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
-            #self.background_image = self.current_holiday_factory.get_background()
-            #self.background_image = pygame.transform.scale(
+            # self.background_image = self.current_holiday_factory.get_background()
+            # self.background_image = pygame.transform.scale(
             #    self.background_image, self.screen.get_size())  # Optionally scale to fit screen
 
             # Used for saving the game using the Memento Design Pattern
             self.caretaker = Caretaker()
-            #self.game_state = { "level": 1, "score": 0, "player_position": (0,0) }
+            # self.game_state = { "level": 1, "score": 0, "player_position": (0,0) }
             # self.game_state = { "level": 1, "score": 0, "player_position": (0,0) }
 
             # TODO: move to elsewhere
@@ -95,7 +95,6 @@ class GameManager:
         )  # Optionally scale to fit screen
         self.screen.blit(splash_image, (0, 0))
         pygame.display.flip()
-
 
     def run(self):
 
@@ -167,7 +166,7 @@ class GameManager:
         # TODO add in the background for each holiday level
         # set background to grey
         self.screen.fill(GREY)
-        #self.screen.blit(self.game.background_image(), (0, 0))
+        # self.screen.blit(self.game.background_image(), (0, 0))
 
         # draw a round rect border around the window with the color of the holiday_factory
         pygame.draw.rect(self.screen,
@@ -244,18 +243,18 @@ class GameManager:
         sys.exit()
 
     def draw_button(self, rect, text, color):
-        font = pygame.font.Font(None, 40)
+        font = pygame.font.SysFont("consolas", 30)
         pygame.draw.rect(self.screen, color, rect)
         text_surface = font.render(text, True, (255, 255, 255))
         text_rect = text_surface.get_rect(center=rect.center)
         self.screen.blit(text_surface, text_rect)
 
     def show_startup_menu(self):
-        
+
         button_color_start = (30, 111, 80)
         button_color_load= (87, 28, 39)
         button_color_quit=(0,0,0)
-        
+
         button_rect1 = pygame.Rect(
             SCREEN_WIDTH // 2 - 300, SCREEN_HEIGHT // 2 + 160, 200, 60
         )
