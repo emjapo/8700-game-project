@@ -26,7 +26,10 @@ from laser import Laser
 from memento import Memento
 
 NUM_OBSTACLES = 4
-ENEMY_LASER_FIRE_INTERVAL = 800 # 300ms between the firings of lasers from enemies, this could increase as dificulty increases
+ENEMY_LASER_FIRE_INTERVAL_MAX = 800 # 800ms between the firings of lasers from enemies, this could increase as dificulty increases
+ENEMY_LASER_FIRE_INTERVAL_MIN = 100 # 100ms between the firings of lasers from enemies, this could increase as dificulty increases
+
+# after each level the player gets another life, this sets the maximum achievable
 MAX_LIVES = 6
 
 class Game:
@@ -58,7 +61,8 @@ class Game:
         # Setup for the enemy laser firings
         self.enemy_lasers_group = pygame.sprite.Group()
         self.enemy_laser_event = pygame.USEREVENT
-        pygame.time.set_timer(self.enemy_laser_event, ENEMY_LASER_FIRE_INTERVAL)
+        self.enemy_laser_fire_interval = ENEMY_LASER_FIRE_INTERVAL_MAX
+        pygame.time.set_timer(self.enemy_laser_event, self.enemy_laser_fire_interval)
         # TODO:  moved to start() and also staring in the game selection window in GameManager
         #self.running = True;
 
@@ -209,7 +213,10 @@ class Game:
             self.current_holiday_type = HolidayType.HALLOWEEN
         self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
         # Hero will need to be updated to the new holiday
-        self.hero_group.sprite.reset()
+        self.hero = self.current_holiday_factory.create_hero(self.screen_width, self.screen_height, self.offset)
+        # self.hero = Hero(self.screen_width, self.screen_height, self.offset)
+        self.hero_group.add(self.hero)
+        #self.hero_group.sprite.reset()
         self.enemies_group.empty()
         self.enemy_lasers_group.empty()
         self.create_enemies()
@@ -217,7 +224,12 @@ class Game:
         # TODO: adjust scoring and difficulty
         # TODO: Score could go up per level, and enemies can move faster and shoot more often
         self.data.level += 1
-
+        if self.data.level != 1 and self.data.level % 3 == 1:
+            if self.enemy_laser_fire_interval > ENEMY_LASER_FIRE_INTERVAL_MIN:
+                self.enemy_laser_fire_interval -= 100
+                print(f"Enemy Fire Rate{self.enemy_laser_fire_interval}")
+                print("Level {}".format(self.data.level))
+                # Could also make enemies move faster
 
     def update(self):
         self.hero_group.update()
