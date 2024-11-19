@@ -42,3 +42,9 @@ class ChristmasFactory(HolidayFactory):
 
 def print_info(self):
     print("I am the Christmas Factory")
+
+def get_background(self):
+    # Construct the file path for the image
+    image_path = os.path.join("resources", "christmas-background.png")
+    splash_image = pygame.image.load(image_path)
+    return splash_image

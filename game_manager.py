@@ -45,7 +45,7 @@ class GameManager:
             GameManager.__instance = self
             # move self.setup() he # Pygame initialization
             pygame.init()
-            pygame.mixer.init()
+
             self.screen = pygame.display.set_mode((SCREEN_WIDTH + OFFSET, SCREEN_HEIGHT + 2*OFFSET))
             # set the title at the top of the window
             pygame.display.set_caption("Holiday Invaders")
@@ -57,26 +57,20 @@ class GameManager:
             self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
             #print(f"Created Factory: {self.current_holiday_factory}")
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
+            #self.background_image = self.current_holiday_factory.get_background()
+            #self.background_image = pygame.transform.scale(
+            #    self.background_image, self.screen.get_size())  # Optionally scale to fit screen
 
-            # Game variables
-            # Use a factory here
-            # made assumptions on game variables, used to save and load for Memento
-            # move these below to game.py?
+            # Used for saving the game using the Memento Design Pattern
             self.caretaker = Caretaker()
             #self.game_state = { "level": 1, "score": 0, "player_position": (0,0) }
 
-            # TODO: move to elsewhere
-            #self.running = True
-            # TODO:  move to GameData
-            #self.enemy_positions = []
-
             # init the sounds needed for winning and losing
+            pygame.mixer.init()
             sound_path = os.path.join("resources", "victory-sound.wav")
             self.victory_sound = pygame.mixer.Sound(sound_path)
             sound_path = os.path.join("resources", "game-over-sound.wav")
             self.game_over_sound = pygame.mixer.Sound(sound_path)
-
-            print("Game Manager Initialized")
 
     def show_splash_screen(self):
         # Construct the file path for the image
@@ -96,35 +90,6 @@ class GameManager:
         self.screen.blit(splash_image, (0, 0))
         pygame.display.flip()
 
-    def show_halloween_background(self):
-        # Construct the file path for the image
-        image_path = os.path.join("resources", "halloween-background.png")
-        splash_image = pygame.image.load(image_path)
-        splash_image = pygame.transform.scale(
-            splash_image, self.screen.get_size()
-        )  # Optionally scale to fit screen
-        self.screen.blit(splash_image, (0, 0))
-        pygame.display.flip()
-
-    def show_thanksgiving_background(self):
-        # Construct the file path for the image
-        image_path = os.path.join("resources", "thanksgiving-background.png")
-        splash_image = pygame.image.load(image_path)
-        splash_image = pygame.transform.scale(
-            splash_image, self.screen.get_size()
-        )  # Optionally scale to fit screen
-        self.screen.blit(splash_image, (0, 0))
-        pygame.display.flip()
-
-    def show_christmas_background(self):
-        # Construct the file path for the image
-        image_path = os.path.join("resources", "christmas-background.png")
-        splash_image = pygame.image.load(image_path)
-        splash_image = pygame.transform.scale(
-            splash_image, self.screen.get_size()
-        )  # Optionally scale to fit screen
-        self.screen.blit(splash_image, (0, 0))
-        pygame.display.flip()
 
     def run(self):
 
@@ -196,6 +161,8 @@ class GameManager:
         # TODO add in the background for each holiday level
         # set background to grey
         self.screen.fill(GREY)
+        #self.screen.blit(self.game.background_image(), (0, 0))
+
         # draw a round rect border around the window with the color of the holiday_factory
         pygame.draw.rect(self.screen,
                          self.current_holiday_factory.get_color(),

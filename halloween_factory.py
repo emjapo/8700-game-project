@@ -1,4 +1,5 @@
 import pygame
+import os
 
 from holiday_factory import HolidayFactory
 from enemies.enemy import Enemy
@@ -44,3 +45,9 @@ class HalloweenFactory(HolidayFactory):
 
     def print_info(self):
         print("I am the Halloween Factory")
+
+    def get_background(self):
+        # Construct the file path for the image
+        image_path = os.path.join("resources", "halloween-background.png")
+        splash_image = pygame.image.load(image_path)
+        return splash_image
