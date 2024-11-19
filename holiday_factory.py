@@ -27,6 +27,9 @@ class HolidayFactory(ABC):
     def print_info(self):
         pass
 
+    def get_background(self):
+        pass
+
 #TODO:  Need hero
 #TODO:  Need laser color
 #TODO:  Backgrounds

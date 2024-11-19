@@ -27,6 +27,7 @@ from memento import Memento
 
 NUM_OBSTACLES = 4
 ENEMY_LASER_FIRE_INTERVAL = 800 # 300ms between the firings of lasers from enemies, this could increase as dificulty increases
+MAX_LIVES = 6
 
 class Game:
     def __init__(self, screen_width, screen_height, offset):
@@ -42,6 +43,7 @@ class Game:
         #self.current_holiday_type = HolidayType.THANKSGIVING
         #self.current_holiday_type = HolidayType.CHRISTMAS
         self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
+        self.background_set = False
         print(f"Created Factory: {self.current_holiday_factory}")
 
         self.enemies_direction = 1
@@ -58,7 +60,7 @@ class Game:
         self.enemy_laser_event = pygame.USEREVENT
         pygame.time.set_timer(self.enemy_laser_event, ENEMY_LASER_FIRE_INTERVAL)
         # TODO:  moved to start() and also staring in the game selection window in GameManager
-        self.running = True;
+        #self.running = True;
 
         self.create_enemies()
 
@@ -194,29 +196,26 @@ class Game:
     def next_level(self):
         # do similar to reset
         # update lives, do we want to give some back?
-        #self.data.lives = 3
+        if self.data.lives < MAX_LIVES:
+            self.data.lives += 1 # give the player back a life
         # Get the new holiday
-        print(f"Holiday Type: {self.current_holiday_type}")
+        #print(f"Holiday Type: {self.current_holiday_type}")
         if self.current_holiday_type == HolidayType.HALLOWEEN:
             self.current_holiday_type = HolidayType.THANKSGIVING
-            print("Change to Thanksgiving")
         elif self.current_holiday_type == HolidayType.THANKSGIVING:
             self.current_holiday_type = HolidayType.CHRISTMAS
-            print("Change to Christmas")
         elif self.current_holiday_type == HolidayType.CHRISTMAS:
             self.current_holiday_type = HolidayType.HALLOWEEN
-            print("Change to Halloween")
         self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
         # Hero will need to be updated to the new holiday
         self.hero_group.sprite.reset()
         self.enemies_group.empty()
         self.enemy_lasers_group.empty()
         self.create_enemies()
-        self.create_obstacles()
+        self.obstacles = self.create_obstacles()
         # TODO: adjust scoring and difficulty
         # TODO: Score could go up per level, and enemies can move faster and shoot more often
         self.data.level += 1
-        print("Next level")
 
 
     def update(self):
@@ -229,6 +228,15 @@ class Game:
 
     def render(self, screen):
         # TODO add in the background for each holiday level
+        #if self.background_set == False:
+        #    print("Background")
+        #    background_image = self.current_holiday_factory.get_background()
+        #    background_image = pygame.transform.scale(
+        #        background_image, screen.get_size())  # Optionally scale to fit screen
+        #    screen.blit(background_image, (0, 0))
+        #    self.background_set = True
+        #    print("Background set")
+        #pygame.display.flip()
         # Draw the hero shooter on the bottom
         self.hero_group.draw(screen)
         # Draw all the lasers of the hero
@@ -383,3 +391,36 @@ class Game:
             self.obstacles.append(obstacle)
 
         self.running = True
+
+    def show_halloween_background(self):
+        # Construct the file path for the image
+        image_path = os.path.join("resources", "halloween-background.png")
+        splash_image = pygame.image.load(image_path)
+        splash_image = pygame.transform.scale(
+            splash_image, self.screen.get_size()
+        )  # Optionally scale to fit screen
+        self.screen.blit(splash_image, (0, 0))
+        pygame.display.flip()
+
+    def show_thanksgiving_background(self):
+        # Construct the file path for the image
+        image_path = os.path.join("resources", "thanksgiving-background.png")
+        splash_image = pygame.image.load(image_path)
+        splash_image = pygame.transform.scale(
+            splash_image, self.screen.get_size()
+        )  # Optionally scale to fit screen
+        self.screen.blit(splash_image, (0, 0))
+        pygame.display.flip()
+
+    def show_christmas_background(self):
+        # Construct the file path for the image
+        image_path = os.path.join("resources", "christmas-background.png")
+        splash_image = pygame.image.load(image_path)
+        splash_image = pygame.transform.scale(
+            splash_image, self.screen.get_size()
+        )  # Optionally scale to fit screen
+        self.screen.blit(splash_image, (0, 0))
+        pygame.display.flip()
+
+    def get_background(self):
+        return self.current_holiday_factory.get_background()
