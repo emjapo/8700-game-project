@@ -11,6 +11,8 @@ from hero import Hero
 from christmas_hero import ChristmasHero
 
 RED = (255, 0, 0)
+CRIMSON_RED = (220, 20, 60)
+CARDINAL_RED = (196, 30, 58)
 
 class ChristmasFactory(HolidayFactory):
     """
@@ -41,7 +43,7 @@ class ChristmasFactory(HolidayFactory):
         return ChristmasHero(x, y, offset)
 
     def get_color(self):
-        return RED
+        return CRIMSON_RED
 
     def print_info(self):
         print("I am the Christmas Factory")

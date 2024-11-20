@@ -11,6 +11,7 @@ from hero import Hero
 from thanksgiving_hero import ThanksgivingHero
 
 BROWN = (139, 69, 19)
+WHITE = (255, 255, 255)
 
 class ThanksgivingFactory(HolidayFactory):
     """
@@ -42,7 +43,7 @@ class ThanksgivingFactory(HolidayFactory):
         return ThanksgivingHero(x, y, offset)
 
     def get_color(self):
-        return BROWN
+        return WHITE
 
     def print_info(self):
         print("I am the Thanksgiving Factory")
