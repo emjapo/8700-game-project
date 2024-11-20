@@ -280,19 +280,10 @@ class GameManager:
         self.screen.blit(text_surface, text_rect)
 
     def show_startup_menu(self):
-        # temporary screen for start up menu
-        #font = pygame.font.SysFont('consolas', 40)
-        #new_game_text = font.render("Press N for New Game", True, YELLOW)#(255, 255, 0))
-        #load_game_text = font.render("Press L to Load Game", True, YELLOW) #(255, 255, 0))
-        #exit_game_text = font.render("Press E to Exit Game", True, YELLOW)#(255, 255, 0))
-        #self.screen.fill((128, 128, 128))
-        #self.screen.blit(new_game_text, (300, 200))
-        #self.screen.blit(load_game_text, (300, 300))
-        #self.screen.blit(exit_game_text, (300, 400))
-
+        
         button_color_start = (30, 111, 80)
-        button_color_load= (87, 28, 39)
-        button_color_quit=(0,0,0)
+        button_color_load = (87, 28, 39)
+        button_color_quit = (0, 0, 0)
 
         button_rect1 = pygame.Rect(
             SCREEN_WIDTH // 2 - 300, SCREEN_HEIGHT // 2 + 160, 200, 60
@@ -303,7 +294,7 @@ class GameManager:
         button_rect3 = pygame.Rect(
             SCREEN_WIDTH // 2 + 120 , SCREEN_HEIGHT // 2 + 160, 200, 60
         )
-        mouse_pos = pygame.mouse.get_pos()
+        
         self.draw_button(button_rect1, "Start Game", button_color_start)
         self.draw_button(button_rect2, "Load Game", button_color_load)
         self.draw_button(button_rect3, "Exit Game", button_color_quit)
@@ -316,7 +307,7 @@ class GameManager:
                     self.game.game_over()
                     pygame.quit()
                     sys.exit()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
+                elif event.type == pygame.MOUSEBUTTONDOWN: # deal with mouse clicks on buttons
                     if button_rect1.collidepoint(event.pos):
                         waiting_for_input = False
                         print("Starting new game...")
