@@ -83,26 +83,26 @@ class Hero(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = ((self.screen_width + self.offset) / 2, self.screen_height))
         self.lasers_group.empty()
 
-    def makeChristmasHero(self):
-        self.holiday = "christmas"
-        image_path = os.path.join("resources", "green-hero.png")
-        self.image = pygame.image.load(image_path).convert_alpha()
-        self.rect = self.image.get_rect(
-            midbottom=((self.screen_width + self.offset) / 2, self.screen_height)
-        )  # middle and bottom
+    #def makeChristmasHero(self):
+    #    self.holiday = "christmas"
+    #    image_path = os.path.join("resources", "green-hero.png")
+    #    self.image = pygame.image.load(image_path).convert_alpha()
+    #    self.rect = self.image.get_rect(
+    #        midbottom=((self.screen_width + self.offset) / 2, self.screen_height)
+    #    )  # middle and bottom
 
-    def makeHalloweenHero(self):
-        self.holiday = "halloween"
-        image_path = os.path.join("resources", "orange-hero.png")
-        self.image = pygame.image.load(image_path).convert_alpha()
-        self.rect = self.image.get_rect(
-            midbottom=((self.screen_width + self.offset) / 2, self.screen_height)
-        )  # middle and bottom
+    #def makeHalloweenHero(self):
+    #    self.holiday = "halloween"
+    #    image_path = os.path.join("resources", "orange-hero.png")
+    #    self.image = pygame.image.load(image_path).convert_alpha()
+    #    self.rect = self.image.get_rect(
+    #        midbottom=((self.screen_width + self.offset) / 2, self.screen_height)
+    #    )  # middle and bottom
 
-    def makeThanksgivingHero(self):
-        self.holiday = "thanksgiving"
-        image_path = os.path.join("resources", "red-hero.png")
-        self.image = pygame.image.load(image_path).convert_alpha()
-        self.rect = self.image.get_rect(
-            midbottom=((self.screen_width + self.offset) / 2, self.screen_height)
-        )  # middle and bottom
+    #def makeThanksgivingHero(self):
+    #    self.holiday = "thanksgiving"
+    #    image_path = os.path.join("resources", "red-hero.png")
+    #    self.image = pygame.image.load(image_path).convert_alpha()
+    #    self.rect = self.image.get_rect(
+    #        midbottom=((self.screen_width + self.offset) / 2, self.screen_height)
+    #    )  # middle and bottom

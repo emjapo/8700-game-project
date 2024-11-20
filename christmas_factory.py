@@ -1,3 +1,6 @@
+import pygame
+import os
+
 from holiday_factory import HolidayFactory
 from enemies.enemy import Enemy
 from enemies.santa import Santa
@@ -40,11 +43,13 @@ class ChristmasFactory(HolidayFactory):
     def get_color(self):
         return RED
 
-def print_info(self):
-    print("I am the Christmas Factory")
+    def print_info(self):
+        print("I am the Christmas Factory")
 
-def get_background(self):
-    # Construct the file path for the image
-    image_path = os.path.join("resources", "christmas-background.png")
-    splash_image = pygame.image.load(image_path)
-    return splash_image
+    def get_background(self):
+        # Construct the file path for the image
+        image_path = os.path.join("resources", "christmas-background.png")
+        splash_image = pygame.image.load(image_path)
+        if splash_image is None:
+            print("Error: Background image failed to load.")
+        return splash_image

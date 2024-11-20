@@ -148,6 +148,8 @@ class GameManager:
                     self.load_game()
                 if event.key == pygame.K_e:
                     self.exit_game()
+                if event.key == pygame.K_n:
+                    self.game.next_level()
             if event.type == pygame.KEYDOWN:
                 # TODO:  This may need a game_over flag in addition to or in place of running to prevent an issue
                 if event.key == pygame.K_SPACE and self.game.running == False:
@@ -169,17 +171,18 @@ class GameManager:
         # TODO add in the background for each holiday level
         # set background to grey
         self.screen.fill(GREY)
+        self.game.render_background(self.screen)
 
         # self.screen.blit(self.game.background_image(), (0, 0))
         # render UI overlay information, score, highscore, levels and borders
-        self.render_ui_borders()
+        #self.render_ui_borders()
+
+        """Render game objects."""
+        self.game.render_foreground(self.screen)
         self.render_level()
         self.render_score()
         self.render_highscore()
         self.render_remaining_lives()
-
-        """Render game objects."""
-        self.game.render(self.screen)
         pygame.display.update()
 
     def render_remaining_lives(self):
@@ -192,8 +195,8 @@ class GameManager:
         # draw a round rect border around the window with the color of the holiday_factory
         pygame.draw.rect(self.screen,
                          self.game.current_holiday_factory.get_color(),
-                         (10,10,780,780),
-                         2,
+                         (0,0,800,800),#780,780),
+                         10,
                          0,
                          60,
                          60,
