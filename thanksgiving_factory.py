@@ -1,3 +1,6 @@
+import pygame
+import os
+
 from holiday_factory import HolidayFactory
 from enemies.enemy import Enemy
 from enemies.turkey import Turkey
@@ -41,11 +44,16 @@ class ThanksgivingFactory(HolidayFactory):
     def get_color(self):
         return BROWN
 
-def print_info(self):
-    print("I am the Thanksgiving Factory")
+    def print_info(self):
+        print("I am the Thanksgiving Factory")
 
-def get_background(self):
-    # Construct the file path for the image
-    image_path = os.path.join("resources", "thanksgiving-background.png")
-    splash_image = pygame.image.load(image_path)
-    return splash_image
+    def get_background(self):
+        # Construct the file path for the image
+        image_path = os.path.join("resources", "thanksgiving-background.png")
+        try:
+            splash_image = pygame.image.load(image_path)
+            #splash_image.convert_alpha()
+            #splash_image.set_alpha(22)
+        except pygame.error as e:
+            print(f"Error loading Thanksgiving background image: {e}")
+        return splash_image

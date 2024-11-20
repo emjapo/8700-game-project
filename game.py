@@ -48,7 +48,9 @@ class Game:
         #self.current_holiday_type = HolidayType.THANKSGIVING
         #self.current_holiday_type = HolidayType.CHRISTMAS
         self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
-        self.background_set = False
+        self.background_image = self.current_holiday_factory.get_background()
+        self.background_image_scaled = None
+
         print(f"Created Factory: {self.current_holiday_factory}")
 
         self.enemies_direction = 1
@@ -62,9 +64,11 @@ class Game:
         self.enemies_group = pygame.sprite.Group()
         # Setup for the enemy laser firings
         self.enemy_lasers_group = pygame.sprite.Group()
+        # Use a timer to randomly shoot the enemy lasers
         self.enemy_laser_event = pygame.USEREVENT
         self.enemy_laser_fire_interval = ENEMY_LASER_FIRE_INTERVAL_MAX
         pygame.time.set_timer(self.enemy_laser_event, self.enemy_laser_fire_interval)
+
         # TODO:  moved to start() and also staring in the game selection window in GameManager
         #self.running = True;
 
@@ -196,11 +200,13 @@ class Game:
             if len(self.enemies_group) == 0:
                 print("No enemies")
                 # No enemies on screen, so level complete
-                self.running == False
+                #self.running == False
                 self.next_level()
-                self.running == True
+                #self.running == True
 
     def next_level(self):
+        self.running = False
+
         # do similar to reset
         # update lives, do we want to give some back?
         if self.data.lives < MAX_LIVES:
@@ -214,6 +220,9 @@ class Game:
         elif self.current_holiday_type == HolidayType.CHRISTMAS:
             self.current_holiday_type = HolidayType.HALLOWEEN
         self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
+        self.background_image = self.current_holiday_factory.get_background()
+        self.background_image_scaled = None
+
         # Hero will need to be updated to the new holiday
         self.hero = self.current_holiday_factory.create_hero(self.screen_width, self.screen_height, self.offset)
         # self.hero = Hero(self.screen_width, self.screen_height, self.offset)
@@ -226,32 +235,34 @@ class Game:
         # TODO: adjust scoring and difficulty
         # TODO: Score could go up per level, and enemies can move faster and shoot more often
         self.data.level += 1
+        self.increase_fire_rate()
+        print("Level {}".format(self.data.level))
+        # Could also make enemies move faster
+        self.running = True
+
+    def increase_fire_rate(self):
         if self.data.level != 1 and self.data.level % 3 == 1:
             if self.enemy_laser_fire_interval > ENEMY_LASER_FIRE_INTERVAL_MIN:
                 self.enemy_laser_fire_interval -= 100
-                print(f"Enemy Fire Rate{self.enemy_laser_fire_interval}")
-                print("Level {}".format(self.data.level))
-                # Could also make enemies move faster
+                pygame.time.set_timer(self.enemy_laser_event, self.enemy_laser_fire_interval)
+        print(f"Enemy Fire Rate{self.enemy_laser_fire_interval}")
 
     def update(self):
         self.hero_group.update()
         self.move_enemies()
-        # self.game.shoot_enemy_laser()
         self.enemy_lasers_group.update()
         self.check_for_collision()
         self.check_for_enemies()
 
-    def render(self, screen):
-        # TODO add in the background for each holiday level
-        #if self.background_set == False:
-        #    print("Background")
-        #    background_image = self.current_holiday_factory.get_background()
-        #    background_image = pygame.transform.scale(
-        #        background_image, screen.get_size())  # Optionally scale to fit screen
-        #    screen.blit(background_image, (0, 0))
-        #    self.background_set = True
-        #    print("Background set")
-        #pygame.display.flip()
+    def render_background(self, screen):
+        # use a cached scaled image unless not loaded, otherwise render performance seriously suffers
+        if self.background_image is not None:
+            if self.background_image_scaled is None:
+                self.background_image_scaled = pygame.transform.scale(
+                self.background_image, screen.get_size())  # Optionally scale to fit screen
+        screen.blit(self.background_image_scaled, (0, 0))
+
+    def render_foreground(self, screen):
         # Draw the hero shooter on the bottom
         self.hero_group.draw(screen)
         # Draw all the lasers of the hero
@@ -265,20 +276,19 @@ class Game:
         self.enemy_lasers_group.draw(screen)
 
     def game_over(self):
-        print("Game Over!")
-        # TODO:  Save high score
         self.data.determine_high_score()
-        self.running = False
+        self.stop()
 
     def reset(self):
         #reset game state
+        self.level = 1
         self.data.lives = 3
         self.hero_group.sprite.reset()
         self.enemies_group.empty()
         self.enemy_lasers_group.empty()
         self.create_enemies()
         self.create_obstacles()
-        self.running = True
+        self.start()
 
     def create_memento(self):
         self.enemy_lasers_group.empty()

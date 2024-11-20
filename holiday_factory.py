@@ -21,12 +21,15 @@ class HolidayFactory(ABC):
     def create_hero(self, x, y, offset) -> Hero:
         pass
 
+    @abstractmethod
     def get_color(self):
         pass
 
+    @abstractmethod
     def print_info(self):
         pass
 
+    @abstractmethod
     def get_background(self):
         pass
 
