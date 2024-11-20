@@ -81,9 +81,13 @@ class GameManager:
             # Play a sound randomly
             self.holiday_sound_event = pygame.USEREVENT + 2
             # Randomly set a timer interval (between 1000ms to 5000ms)
-            timer_interval = random.randint(1000, 5000)
+            #self.set_holiday_sound_timer()
+            timer_interval = random.randint(2000,8000)
             pygame.time.set_timer(self.holiday_sound_event, timer_interval)
 
+    def set_holiday_sound_timer(self):
+        timer_interval = random.randint(2000,8000)
+        pygame.time.set_timer(self.holiday_sound_event, timer_interval)
 
     def show_splash_screen(self):
         # Construct the file path for the image
@@ -107,28 +111,22 @@ class GameManager:
 
         self.show_splash_screen()
         pygame.time.delay(SPLASH_DELAY)
+
         while True:
             # Show the splash screen
             self.show_startup_menu()
 
             """Main game loop"""
-            # while True:
             while self.game.running:
                 self.handle_events()
                 self.update()
                 self.render()
-
-                # TODO:  Should this move to handle_events()?
-                keys = pygame.key.get_pressed()
-                if keys[pygame.K_s]:
-                    self.save_game()
-                    self.show_startup_menu()
-
                 self.clock.tick(60)  # 60 FPS limit
-                # if self.game.running == False:
-                #    # end the timers
+
+            # Game Over
             self.game_over_sound.play(0)
             self.show_game_over_screen()
+            # wait for the sound to finish before going to the Start Screen
             while pygame.mixer.get_busy():
                 pygame.time.delay(100)
 
@@ -139,11 +137,6 @@ class GameManager:
                 self.game.shoot_enemy_laser()
             if event.type == pygame.QUIT:
                 self.exit_game()
-                #self.game.running = False
-                # TODO:  Tell game that we are quitting, save high score
-                #self.game.game_over()
-                #pygame.quit()
-                #sys.exit()
             # Handle other key events if necessary
             # adding save and load command
             if event.type == pygame.KEYDOWN:
@@ -155,45 +148,47 @@ class GameManager:
                     self.exit_game()
                 if event.key == pygame.K_n:
                     self.game.next_level()
-            if event.type == pygame.KEYDOWN:
+            #if event.type == pygame.KEYDOWN:
                 # TODO:  This may need a game_over flag in addition to or in place of running to prevent an issue
-                if event.key == pygame.K_SPACE and self.game.running == False:
-                    # start the game over from a reset state
-                    self.game.reset()
+            #    if event.key == pygame.K_SPACE and self.game.running == False:
+            #        # start the game over from a reset state
+            #        self.game.reset()
+            # This event handles playing the Holiday sounds randomly
             if event.type == self.holiday_sound_event:
                 # Play the sound in a non-blocking way
+                # TODO:  Issue of overlapping sound can be resolved with a call to stop()
+                #self.holiday_sound.stop()
                 self.holiday_sound.play()
                 # Reset the timer with a new random interval
+                #self.set_holiday_sound_timer()
                 timer_interval = random.randint(2000, 8000)
                 pygame.time.set_timer(self.holiday_sound_event, timer_interval)
             if event.type == self.game.next_level_event:
+                # stop the sound on a next level event, otherwise the sounds will bleed over
                 self.holiday_sound.stop()
+                # load in the new sound for the next level
                 self.holiday_sound = pygame.mixer.Sound(self.game.get_theme_sound_path())
-
+                timer_interval = random.randint(2000, 8000)
+                pygame.time.set_timer(self.holiday_sound_event, timer_interval)
+                #self.set_holiday_sound_timer()
 
     def update(self):
         if self.game.running:
             """Update game objects."""
             self.game.update()
-            # self.update_level_surface()
-            # self.update_score_surface()
-        # else:
-        # self.game_over_sound.play(0)
-        # self.show_game_over_screen()
-        # pygame.time.delay(SPLASH_DELAY)
 
     def render(self):
-        # TODO add in the background for each holiday level
         # set background to grey
         self.screen.fill(GREY)
         self.game.render_background(self.screen)
 
-        # self.screen.blit(self.game.background_image(), (0, 0))
         # render UI overlay information, score, highscore, levels and borders
+        # removed in favor of background images
         #self.render_ui_borders()
 
         """Render game objects."""
         self.game.render_foreground(self.screen)
+        """Render UI Overlays """
         self.render_level()
         self.render_score()
         self.render_highscore()
@@ -281,15 +276,6 @@ class GameManager:
         self.screen.blit(text_surface, text_rect)
 
     def show_startup_menu(self):
-        # temporary screen for start up menu
-        #font = pygame.font.SysFont('consolas', 40)
-        #new_game_text = font.render("Press N for New Game", True, YELLOW)#(255, 255, 0))
-        #load_game_text = font.render("Press L to Load Game", True, YELLOW) #(255, 255, 0))
-        #exit_game_text = font.render("Press E to Exit Game", True, YELLOW)#(255, 255, 0))
-        #self.screen.fill((128, 128, 128))
-        #self.screen.blit(new_game_text, (300, 200))
-        #self.screen.blit(load_game_text, (300, 300))
-        #self.screen.blit(exit_game_text, (300, 400))
 
         button_color_start = (30, 111, 80)
         button_color_load= (87, 28, 39)
@@ -310,6 +296,7 @@ class GameManager:
         self.draw_button(button_rect3, "Exit Game", button_color_quit)
         pygame.display.flip()
 
+        # Since this screen is processed outside of the game running loop this sets up a new event handler
         waiting_for_input = True
         while waiting_for_input:
             for event in pygame.event.get():
