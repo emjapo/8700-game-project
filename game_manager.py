@@ -169,8 +169,26 @@ class GameManager:
         # TODO add in the background for each holiday level
         # set background to grey
         self.screen.fill(GREY)
-        # self.screen.blit(self.game.background_image(), (0, 0))
 
+        # self.screen.blit(self.game.background_image(), (0, 0))
+        # render UI overlay information, score, highscore, levels and borders
+        self.render_ui_borders()
+        self.render_level()
+        self.render_score()
+        self.render_highscore()
+        self.render_remaining_lives()
+
+        """Render game objects."""
+        self.game.render(self.screen)
+        pygame.display.update()
+
+    def render_remaining_lives(self):
+        remaining_lives_x = 50  # move to the right 50 pixels
+        for life in range(self.game.data.lives):
+            self.screen.blit(self.game.hero_group.sprite.image, (remaining_lives_x, 745))
+            remaining_lives_x += 75
+
+    def render_ui_borders(self):
         # draw a round rect border around the window with the color of the holiday_factory
         pygame.draw.rect(self.screen,
                          self.game.current_holiday_factory.get_color(),
@@ -187,54 +205,34 @@ class GameManager:
                          (25,730),
                          (775, 730),
                          3)
-        # Put the current level in the bottom right hand corner
-        self.screen.blit(self.level_surface(), (570,740,50,50))
-        self.screen.blit(self.score_label_surface(), (50,15,50,50))
-        self.screen.blit(self.score_surface(), (50,40,50,50))
-        self.screen.blit(self.highscore_label_surface(), (540, 15, 50, 50))
-        self.screen.blit(self.highscore_surface(), (540, 40, 50, 50))
-
-        remaining_lives_x = 50 # move to the right 50 pixels
-        for life in range(self.game.data.lives):
-            self.screen.blit(self.game.hero_group.sprite.image, (remaining_lives_x, 745))
-            remaining_lives_x += 75
-
-        """Update game objects."""
-        self.game.render(self.screen)
-
-        pygame.display.update()
-
-    def level_surface(self):
+    def render_level(self):
         font = pygame.font.SysFont('consolas', 40)
         level_string = f"LEVEL {self.game.data.level:02}"  # Creating the string using an f-string
         level_surface = font.render(level_string, False, self.game.current_holiday_factory.get_color())
-        return level_surface
+        self.screen.blit(level_surface, (570, 740, 50, 50))
 
-    def score_surface(self):
+    def render_score(self):
         font = pygame.font.SysFont('consolas', 40)
+
         score_string = str(self.game.data.score).zfill(8)  # Creating the string using an f-string
         score_surface = font.render(score_string, False, self.game.current_holiday_factory.get_color())
-        return score_surface
+        self.screen.blit(score_surface, (50, 40, 50, 50))
 
-    def score_label_surface(self):
-        font = pygame.font.SysFont('consolas', 40)
         score_label_string = f"SCORE"  # Creating the string using an f-string
         score_label_surface = font.render(score_label_string, False, self.game.current_holiday_factory.get_color())
-        return score_label_surface
+        self.screen.blit(score_label_surface, (50, 15, 50, 50))
 
-    def highscore_surface(self):
+    def render_highscore(self):
         font = pygame.font.SysFont('consolas', 40)
+
         highscore_string = str(self.game.data.high_score).zfill(8)  # Creating the string using an f-string
         highscore_surface = font.render(highscore_string, False, self.game.current_holiday_factory.get_color())
-        return highscore_surface
+        self.screen.blit(highscore_surface, (540, 40, 50, 50))
 
-    def highscore_label_surface(self):
-        font = pygame.font.SysFont('consolas', 40)
         highscore_label_string = f"HIGHSCORE"  # Creating the string using an f-string
         highscore_label_surface = font.render(highscore_label_string, False,
-                                  self.game.current_holiday_factory.get_color())
-        return highscore_label_surface
-
+                                              self.game.current_holiday_factory.get_color())
+        self.screen.blit(highscore_label_surface, (540, 15, 50, 50))
 
     def save_game(self):
         memento = self.game.create_memento()  # Create Memento from the current game state
