@@ -53,3 +53,7 @@ class ChristmasFactory(HolidayFactory):
         if splash_image is None:
             print("Error: Background image failed to load.")
         return splash_image
+
+    def get_sound_path(self):
+        sound_path = os.path.join("resources", "sleigh_bells.wav")
+        return sound_path

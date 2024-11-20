@@ -48,10 +48,9 @@ class Game:
         #self.current_holiday_type = HolidayType.THANKSGIVING
         #self.current_holiday_type = HolidayType.CHRISTMAS
         self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
+        print(f"Created Factory: {self.current_holiday_factory}")
         self.background_image = self.current_holiday_factory.get_background()
         self.background_image_scaled = None
-
-        print(f"Created Factory: {self.current_holiday_factory}")
 
         self.enemies_direction = 1
 
@@ -65,9 +64,15 @@ class Game:
         # Setup for the enemy laser firings
         self.enemy_lasers_group = pygame.sprite.Group()
         # Use a timer to randomly shoot the enemy lasers
-        self.enemy_laser_event = pygame.USEREVENT
+        self.enemy_laser_event = pygame.USEREVENT + 1
         self.enemy_laser_fire_interval = ENEMY_LASER_FIRE_INTERVAL_MAX
         pygame.time.set_timer(self.enemy_laser_event, self.enemy_laser_fire_interval)
+
+        self.bonus_enemy_event = pygame.USEREVENT + 2
+
+        self.next_level_event = pygame.USEREVENT + 3
+
+
 
         # TODO:  moved to start() and also staring in the game selection window in GameManager
         #self.running = True;
@@ -206,7 +211,7 @@ class Game:
 
     def next_level(self):
         self.running = False
-
+        pygame.event.post(pygame.event.Event(self.next_level_event))
         # do similar to reset
         # update lives, do we want to give some back?
         if self.data.lives < MAX_LIVES:
@@ -289,6 +294,11 @@ class Game:
         self.create_enemies()
         self.create_obstacles()
         self.start()
+
+    def get_theme_sound_path(self):
+        return self.current_holiday_factory.get_sound_path()
+    def get_theme_color(self):
+        return self.current_holiday_factory.get_color()
 
     def create_memento(self):
         self.enemy_lasers_group.empty()

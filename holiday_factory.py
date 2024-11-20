@@ -33,6 +33,10 @@ class HolidayFactory(ABC):
     def get_background(self):
         pass
 
+    @abstractmethod
+    def get_sound_path(self):
+        pass
+
 #TODO:  Need hero
 #TODO:  Need laser color
 #TODO:  Backgrounds

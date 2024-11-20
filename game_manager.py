@@ -6,6 +6,7 @@
 
 import os
 import sys
+import random
 import pygame
 
 from game import Game
@@ -50,7 +51,6 @@ class GameManager:
                 "This class is a singleton!" )
         else:
             GameManager.__instance = self
-            # move self.setup() he # Pygame initialization
             pygame.init()
 
             self.screen = pygame.display.set_mode((SCREEN_WIDTH + OFFSET, SCREEN_HEIGHT + 2*OFFSET))
@@ -64,9 +64,6 @@ class GameManager:
             self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
             # print(f"Created Factory: {self.current_holiday_factory}")
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
-            # self.background_image = self.current_holiday_factory.get_background()
-            # self.background_image = pygame.transform.scale(
-            #    self.background_image, self.screen.get_size())  # Optionally scale to fit screen
 
             # Used for saving the game using the Memento Design Pattern
             self.caretaker = Caretaker()
@@ -79,6 +76,14 @@ class GameManager:
             self.victory_sound = pygame.mixer.Sound(sound_path)
             sound_path = os.path.join("resources", "game-over-sound.wav")
             self.game_over_sound = pygame.mixer.Sound(sound_path)
+            self.holiday_sound = pygame.mixer.Sound(self.game.get_theme_sound_path())
+
+            # Play a sound randomly
+            self.holiday_sound_event = pygame.USEREVENT + 2
+            # Randomly set a timer interval (between 1000ms to 5000ms)
+            timer_interval = random.randint(1000, 5000)
+            pygame.time.set_timer(self.holiday_sound_event, timer_interval)
+
 
     def show_splash_screen(self):
         # Construct the file path for the image
@@ -155,6 +160,15 @@ class GameManager:
                 if event.key == pygame.K_SPACE and self.game.running == False:
                     # start the game over from a reset state
                     self.game.reset()
+            if event.type == self.holiday_sound_event:
+                # Play the sound in a non-blocking way
+                self.holiday_sound.play()
+                # Reset the timer with a new random interval
+                timer_interval = random.randint(1000, 5000)
+                pygame.time.set_timer(self.holiday_sound_event, timer_interval)
+            if event.type == self.game.next_level_event:
+                self.holiday_sound = pygame.mixer.Sound(self.game.get_theme_sound_path())
+
 
     def update(self):
         if self.game.running:
@@ -194,7 +208,7 @@ class GameManager:
     def render_ui_borders(self):
         # draw a round rect border around the window with the color of the holiday_factory
         pygame.draw.rect(self.screen,
-                         self.game.current_holiday_factory.get_color(),
+                         self.game.get_theme_color()
                          (0,0,800,800),#780,780),
                          10,
                          0,
@@ -204,37 +218,37 @@ class GameManager:
                          60)
         # draw a line at the bottom of the window to separate the lives remaining
         pygame.draw.line(self.screen,
-                         self.game.current_holiday_factory.get_color(),
+                         self.game.get_theme_color()
                          (25,730),
                          (775, 730),
                          3)
     def render_level(self):
         font = pygame.font.SysFont('consolas', 40)
         level_string = f"LEVEL {self.game.data.level:02}"  # Creating the string using an f-string
-        level_surface = font.render(level_string, False, self.game.current_holiday_factory.get_color())
+        level_surface = font.render(level_string, False, self.game.get_theme_color())
         self.screen.blit(level_surface, (570, 740, 50, 50))
 
     def render_score(self):
         font = pygame.font.SysFont('consolas', 40)
 
         score_string = str(self.game.data.score).zfill(8)  # Creating the string using an f-string
-        score_surface = font.render(score_string, False, self.game.current_holiday_factory.get_color())
+        score_surface = font.render(score_string, False, self.game.get_theme_color())
         self.screen.blit(score_surface, (50, 40, 50, 50))
 
         score_label_string = f"SCORE"  # Creating the string using an f-string
-        score_label_surface = font.render(score_label_string, False, self.game.current_holiday_factory.get_color())
+        score_label_surface = font.render(score_label_string, False, self.game.get_theme_color())
         self.screen.blit(score_label_surface, (50, 15, 50, 50))
 
     def render_highscore(self):
         font = pygame.font.SysFont('consolas', 40)
 
         highscore_string = str(self.game.data.high_score).zfill(8)  # Creating the string using an f-string
-        highscore_surface = font.render(highscore_string, False, self.game.current_holiday_factory.get_color())
+        highscore_surface = font.render(highscore_string, False, self.game.get_theme_color())
         self.screen.blit(highscore_surface, (540, 40, 50, 50))
 
         highscore_label_string = f"HIGHSCORE"  # Creating the string using an f-string
         highscore_label_surface = font.render(highscore_label_string, False,
-                                              self.game.current_holiday_factory.get_color())
+                                              self.game.get_theme_color())
         self.screen.blit(highscore_label_surface, (540, 15, 50, 50))
 
     def save_game(self):

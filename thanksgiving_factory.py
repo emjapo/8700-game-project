@@ -57,3 +57,7 @@ class ThanksgivingFactory(HolidayFactory):
         except pygame.error as e:
             print(f"Error loading Thanksgiving background image: {e}")
         return splash_image
+
+    def get_sound_path(self):
+        sound_path = os.path.join("resources", "turkey_gobble.wav")
+        return sound_path

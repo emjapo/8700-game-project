@@ -51,3 +51,7 @@ class HalloweenFactory(HolidayFactory):
         image_path = os.path.join("resources", "halloween-background.png")
         splash_image = pygame.image.load(image_path)
         return splash_image
+
+    def get_sound_path(self):
+        sound_path = os.path.join("resources", "ghost_sound.ogg")
+        return sound_path
