@@ -164,9 +164,10 @@ class GameManager:
                 # Play the sound in a non-blocking way
                 self.holiday_sound.play()
                 # Reset the timer with a new random interval
-                timer_interval = random.randint(1000, 5000)
+                timer_interval = random.randint(2000, 8000)
                 pygame.time.set_timer(self.holiday_sound_event, timer_interval)
             if event.type == self.game.next_level_event:
+                self.holiday_sound.stop()
                 self.holiday_sound = pygame.mixer.Sound(self.game.get_theme_sound_path())
 
 
