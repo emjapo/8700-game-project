@@ -365,7 +365,8 @@ class Game:
     def restore_from_memento(self, memento):
         self.enemies_group.empty()
         self.hero_group.sprite.lasers_group.empty()
-        self.enemy_lasers_group.empty()
+        self.enemy_lasers_group.empty(
+)
         self.obstacles.clear()
 
 
@@ -430,6 +431,9 @@ class Game:
 
         for obstacle_state in state.get('obstacles', []):
             obstacle = Obstacle(obstacle_state['x'], obstacle_state['y'], self.current_holiday_type)
+
+            obstacle.blocks_group.empty()
+
             # Recreate individual blocks
             for block_state in obstacle_state.get('blocks', []):
                 block = pygame.sprite.Sprite()
