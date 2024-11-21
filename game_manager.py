@@ -167,7 +167,6 @@ class GameManager:
                 #self.holiday_sound.stop()
                 self.holiday_sound.play()
                 # Reset the timer with a new random interval
-                #self.set_holiday_sound_timer()
                 timer_interval = random.randint(2000, 8000)
                 pygame.time.set_timer(self.holiday_sound_event, timer_interval)
 
@@ -179,7 +178,6 @@ class GameManager:
                 self.holiday_sound = pygame.mixer.Sound(self.game.get_theme_sound_path())
                 timer_interval = random.randint(2000, 8000)
                 pygame.time.set_timer(self.holiday_sound_event, timer_interval)
-                #self.set_holiday_sound_timer()
 
 
     def update(self):
