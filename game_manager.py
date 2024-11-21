@@ -258,8 +258,9 @@ class GameManager:
         self.screen.blit(highscore_label_surface, (540, 15, 50, 50))
 
     def save_game(self):
-        memento = self.game.create_memento()  # Create Memento from the current game state
-        self.caretaker.save_memento(memento)    # save file using caretaker
+        if self.game.running:
+            memento = self.game.create_memento()  # Create Memento from the current game state
+            self.caretaker.save_memento(memento)    # save file using caretaker
         print("Game saved!")
 
     def load_game(self):
@@ -274,7 +275,7 @@ class GameManager:
     def exit_game(self):
         print("Exiting game...")
         self.game.game_over()
-        self.save_game()
+        #self.save_game()
         pygame.quit()
         sys.exit()
 
