@@ -163,9 +163,7 @@ class Game:
                 enemies_hit = pygame.sprite.spritecollide(laser_sprite, self.enemies_group, True)
                 if enemies_hit:
                     for enemy in enemies_hit:
-                        print(f"Enemy hit and removed: {enemy.__class__.__name__}") ### CCOMMMMENT
                         self.data.update_score(enemy.get_points())
-                        print(f"Remaining enemies: {len(self.enemies_group.sprites())}")
                         #self.data.score += enemy.get_points()
                     laser_sprite.kill()
                 # loop over the obstacles
@@ -319,11 +317,6 @@ class Game:
         self.enemy_lasers_group.empty()
         self.hero_group.sprite.lasers_group.empty()
 
-        print("DEBUG - Saving game state:")
-        print(f"Current number of enemies: {len(self.enemies_group.sprites())}")
-        for enemy in self.enemies_group.sprites():
-            print(f"Enemy type: {enemy.__class__.__name__}, Position: ({enemy.rect.x}, {enemy.rect.y})")
-
         state = {
             "data": {
                 "score": self.data.score,
@@ -379,11 +372,6 @@ class Game:
 
 
         state = memento.get_state()
-
-        print("DEBUG - Loading game state:")
-        print(f"Number of enemies in saved state: {len(state.get('enemies', []))}")
-        for enemy_state in state.get('enemies', []):
-            print(f"Enemy type to restore: {enemy_state['type']}, Position: ({enemy_state['x']}, {enemy_state['y']})")
 
         self.data.score = state["data"]["score"]
         self.data.lives = state["data"]["lives"]
