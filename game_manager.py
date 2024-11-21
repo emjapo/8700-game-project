@@ -60,8 +60,8 @@ class GameManager:
             # Clock to control frame rate
             self.clock = pygame.time.Clock()
 
-            self.current_holiday_type = HolidayType.HALLOWEEN
-            self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
+            #self.current_holiday_type = HolidayType.HALLOWEEN
+            #self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
             # print(f"Created Factory: {self.current_holiday_factory}")
             self.game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
 
@@ -266,6 +266,7 @@ class GameManager:
         if memento:
             print("Loading saved game state.")
             self.game.restore_from_memento(memento)  # restore the game state from Memento
+            self.holiday_sound = pygame.mixer.Sound(self.game.get_theme_sound_path())
             self.game.running = True
         else:
             print("No saved game state found.")
