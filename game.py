@@ -317,11 +317,13 @@ class Game:
     def create_memento(self):
         self.enemy_lasers_group.empty()
         self.hero_group.sprite.lasers_group.empty()
+
         state = {
             "data": {
                 "score": self.data.score,
                 "lives": self.data.lives,
-                "level": self.data.level
+                "level": self.data.level,
+                "holiday_type": self.current_holiday_type.value
             },
             "hero": {
                 "x": self.hero.rect.x,
@@ -337,7 +339,7 @@ class Game:
                     "x": enemy.rect.x, 
                     "y": enemy.rect.y
                 }   
-                for enemy in self.enemies_group
+                for enemy in self.enemies_group.sprites()
             ],
             "enemy_lasers": [
                 {"x": laser.rect.x, "y": laser.rect.y} 
@@ -364,17 +366,32 @@ class Game:
         return Memento(state)
 
     def restore_from_memento(self, memento):
-        self.enemies_group.empty()
-        self.hero_group.sprite.lasers_group.empty()
-        self.enemy_lasers_group.empty(
-)
-        self.obstacles.clear()
-
 
         state = memento.get_state()
+
         self.data.score = state["data"]["score"]
         self.data.lives = state["data"]["lives"]
         self.data.level = state["data"]["level"]
+
+        if self.data.level == 1:
+            self.current_holiday_type = HolidayType.HALLOWEEN
+        elif self.data.level == 2:
+            self.current_holiday_type = HolidayType.THANKSGIVING
+        elif self.data.level == 3:
+            self.current_holiday_type = HolidayType.CHRISTMAS
+    
+
+        self.current_holiday_factory = FactorySelector.get_factory(self.current_holiday_type)
+        self.background_image = self.current_holiday_factory.get_background()
+        self.background_image_scaled = None 
+        
+        self.enemies_group.empty()
+        self.hero_group.sprite.lasers_group.empty()
+        self.enemy_lasers_group.empty()
+        self.obstacles.clear()
+
+        self.hero = self.current_holiday_factory.create_hero(self.screen_width, self.screen_height, self.offset)
+        self.hero_group.add(self.hero)
 
         hero_state = state.get('hero', {})
         self.hero.rect.x = hero_state.get('x', self.hero.rect.x)
