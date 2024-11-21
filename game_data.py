@@ -30,6 +30,12 @@ class GameData:
             GameData.save_high_score(self.score)
 
     def update_score(self, score):
+        #self.score += score
+        self.score += score * (self.level - 1) // 3+1
+        if self.score > self.high_score:
+            self.high_score = self.score
+
+    def update_score_bonus(self, score):
         self.score += score
         if self.score > self.high_score:
             self.high_score = self.score

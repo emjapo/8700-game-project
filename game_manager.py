@@ -24,7 +24,7 @@ from laser import Laser
 from obstacle import Obstacle
 
 SCREEN_WIDTH = 750
-SCREEN_HEIGHT = 700
+SCREEN_HEIGHT = 800
 OFFSET = 50
 SPLASH_DELAY = 2000
 
@@ -79,7 +79,7 @@ class GameManager:
             self.holiday_sound = pygame.mixer.Sound(self.game.get_theme_sound_path())
 
             # Play a sound randomly
-            self.holiday_sound_event = pygame.USEREVENT + 2
+            self.holiday_sound_event = pygame.USEREVENT + 1
             # Randomly set a timer interval (between 1000ms to 5000ms)
             #self.set_holiday_sound_timer()
             timer_interval = random.randint(2000,8000)
@@ -133,8 +133,6 @@ class GameManager:
     def handle_events(self):
         """Handle game events like keypresses and window closing."""
         for event in pygame.event.get():
-            if event.type == self.game.enemy_laser_event and self.game.running:
-                self.game.shoot_enemy_laser()
             if event.type == pygame.QUIT:
                 self.exit_game()
             # Handle other key events if necessary
@@ -153,6 +151,15 @@ class GameManager:
             #    if event.key == pygame.K_SPACE and self.game.running == False:
             #        # start the game over from a reset state
             #        self.game.reset()
+
+            # Handle the custom Game related events
+            # Ideally these should be in the Game class but this would require separating the event types
+            if event.type == self.game.enemy_laser_event and self.game.running:
+                self.game.shoot_enemy_laser()
+
+            if event.type == self.game.bonus_enemy_event and self.game.running:
+                self.game.create_bonus_enemy()
+
             # This event handles playing the Holiday sounds randomly
             if event.type == self.holiday_sound_event:
                 # Play the sound in a non-blocking way
@@ -163,6 +170,8 @@ class GameManager:
                 #self.set_holiday_sound_timer()
                 timer_interval = random.randint(2000, 8000)
                 pygame.time.set_timer(self.holiday_sound_event, timer_interval)
+
+            # Check for next_level_event and chane the sound played
             if event.type == self.game.next_level_event:
                 # stop the sound on a next level event, otherwise the sounds will bleed over
                 self.holiday_sound.stop()
@@ -171,6 +180,7 @@ class GameManager:
                 timer_interval = random.randint(2000, 8000)
                 pygame.time.set_timer(self.holiday_sound_event, timer_interval)
                 #self.set_holiday_sound_timer()
+
 
     def update(self):
         if self.game.running:
@@ -198,7 +208,7 @@ class GameManager:
     def render_remaining_lives(self):
         remaining_lives_x = 50  # move to the right 50 pixels
         for life in range(self.game.data.lives):
-            self.screen.blit(self.game.hero_group.sprite.image, (remaining_lives_x, 745))
+            self.screen.blit(self.game.hero_group.sprite.image, (remaining_lives_x, SCREEN_HEIGHT+OFFSET - 5))
             remaining_lives_x += 75
 
     def render_ui_borders(self):
@@ -222,7 +232,7 @@ class GameManager:
         font = pygame.font.SysFont('consolas', 40)
         level_string = f"LEVEL {self.game.data.level:02}"  # Creating the string using an f-string
         level_surface = font.render(level_string, False, self.game.get_theme_color())
-        self.screen.blit(level_surface, (570, 740, 50, 50))
+        self.screen.blit(level_surface, (570, 840, 50, 50))
 
     def render_score(self):
         font = pygame.font.SysFont('consolas', 40)

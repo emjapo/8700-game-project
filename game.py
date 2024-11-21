@@ -24,12 +24,15 @@ from hero import Hero
 from obstacle import Obstacle
 from obstacle import grid
 from enemies.enemy import Enemy
+from enemies.bonus_enemy import BonusEnemy
 from laser import Laser
 from memento import Memento
 
 NUM_OBSTACLES = 4
 ENEMY_LASER_FIRE_INTERVAL_MAX = 800 # 800ms between the firings of lasers from enemies, this could increase as dificulty increases
 ENEMY_LASER_FIRE_INTERVAL_MIN = 100 # 100ms between the firings of lasers from enemies, this could increase as dificulty increases
+BONUS_EVENT_MIN = 4000
+BONUS_EVENT_MAX = 8000
 
 # after each level the player gets another life, this sets the maximum achievable
 MAX_LIVES = 6
@@ -61,23 +64,23 @@ class Game:
         self.hero_group.add(self.hero)
         self.obstacles = self.create_obstacles()
         self.enemies_group = pygame.sprite.Group()
+        self.bonus_enemy_group = pygame.sprite.GroupSingle()
         # Setup for the enemy laser firings
         self.enemy_lasers_group = pygame.sprite.Group()
-        # Use a timer to randomly shoot the enemy lasers
-        self.enemy_laser_event = pygame.USEREVENT + 1
+        self.create_enemies()
+
+        ######## Game Events ###############
+        # Event used to signal shooting enemy lasers based on a background timer
+        self.enemy_laser_event = pygame.USEREVENT + 2
         self.enemy_laser_fire_interval = ENEMY_LASER_FIRE_INTERVAL_MAX
         pygame.time.set_timer(self.enemy_laser_event, self.enemy_laser_fire_interval)
 
-        self.bonus_enemy_event = pygame.USEREVENT + 2
+        # Event signaled to generate a bonus enemy
+        self.bonus_enemy_event = pygame.USEREVENT + 3
+        pygame.time.set_timer(self.bonus_enemy_event, random.randint(BONUS_EVENT_MIN, BONUS_EVENT_MAX))
 
-        self.next_level_event = pygame.USEREVENT + 3
-
-
-
-        # TODO:  moved to start() and also staring in the game selection window in GameManager
-        #self.running = True;
-
-        self.create_enemies()
+        # Event signaled when the next_level is reached
+        self.next_level_event = pygame.USEREVENT + 4
 
     def start(self):
         self.running = True
@@ -100,7 +103,7 @@ class Game:
         for row in range(5):
             for column in range(11):
                 x = 75 + column * 55
-                y = 110 + row * 55
+                y = 115 + row * 55
                 if row == 0:
                     enemy_type = 2
                 elif row in (1,2):
@@ -110,6 +113,8 @@ class Game:
                 enemy = self.current_holiday_factory.create_enemy(enemy_type, x + self.offset/2, y)
                 self.enemies_group.add(enemy)
                 #print(f"Created enemy: {enemy}")
+    def create_bonus_enemy(self):
+        self.bonus_enemy_group.add(BonusEnemy(self.screen_width))
 
     # This function moves the enemies left and right, each time a side is touched reverse direction, and move down
     def move_enemies(self):
@@ -165,6 +170,10 @@ class Game:
                     # like above on collision remove the laser
                     if pygame.sprite.spritecollide(laser_sprite, obstacle.blocks_group, True):
                         laser_sprite.kill()
+                bonus_hit = pygame.sprite.spritecollide(laser_sprite, self.bonus_enemy_group, True)
+                if bonus_hit:
+                    for bonus in bonus_hit:
+                        self.data.update_score_bonus(bonus.get_points())
         # Enemy Lasers
         # if there are lasers from the enemies in the scene
         if self.enemy_lasers_group:
@@ -172,7 +181,7 @@ class Game:
                 # check for the collision with the hero BUT do not kill() the hero, the player will have multiple lives
                 if pygame.sprite.spritecollide(laser_sprite, self.hero_group, False):
                     laser_sprite.kill()
-                    print("Hero hit by laser")
+                    #print("Hero hit by laser")
                     self.hero.hit()
                     self.data.lives -= 1
                     #self.hero.decrease_lives()
@@ -198,7 +207,7 @@ class Game:
                     #self.hero.decrease_lives()
                     if self.data.lives == 0:
                         self.game_over()
-                    print("Hero hit by enemy")
+                    #print("Hero hit by enemy")
 
     def check_for_enemies(self):
         if self.running:
@@ -258,6 +267,7 @@ class Game:
         self.enemy_lasers_group.update()
         self.check_for_collision()
         self.check_for_enemies()
+        self.bonus_enemy_group.update()
 
     def render_background(self, screen):
         # use a cached scaled image unless not loaded, otherwise render performance seriously suffers
@@ -276,6 +286,7 @@ class Game:
         for obstacle in self.obstacles:
             obstacle.blocks_group.draw(screen)
         self.enemies_group.draw(screen)
+        self.bonus_enemy_group.draw(screen)
 
         # draw all the enemy lasers firing
         self.enemy_lasers_group.draw(screen)
@@ -283,6 +294,7 @@ class Game:
     def game_over(self):
         self.data.determine_high_score()
         self.stop()
+        self.reset()
 
     def reset(self):
         #reset game state
@@ -293,7 +305,7 @@ class Game:
         self.enemy_lasers_group.empty()
         self.create_enemies()
         self.create_obstacles()
-        self.start()
+        #self.start()
 
     def get_theme_sound_path(self):
         return self.current_holiday_factory.get_sound_path()
@@ -354,6 +366,7 @@ class Game:
         self.hero_group.sprite.lasers_group.empty()
         self.enemy_lasers_group.empty()
         self.obstacles.clear()
+
 
         state = memento.get_state()
         self.data.score = state["data"]["score"]
