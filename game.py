@@ -88,6 +88,7 @@ class Game:
     def stop(self):
         self.running = False
 
+
     def create_obstacles(self):
         # Want 4 obstacles
         obstacle_width = len(grid[0]) * 3 #TODO:  change 3 to Obstacle width

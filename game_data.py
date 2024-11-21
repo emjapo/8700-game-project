@@ -26,7 +26,8 @@ class GameData:
         return self.number_of_lives
 
     def determine_high_score(self):
-        if self.score > self.high_score:
+        if self.score >= self.high_score:
+            print("Saving High Score")
             GameData.save_high_score(self.score)
 
     def update_score(self, score):
