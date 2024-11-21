@@ -31,8 +31,8 @@ from memento import Memento
 NUM_OBSTACLES = 4
 ENEMY_LASER_FIRE_INTERVAL_MAX = 800 # 800ms between the firings of lasers from enemies, this could increase as dificulty increases
 ENEMY_LASER_FIRE_INTERVAL_MIN = 100 # 100ms between the firings of lasers from enemies, this could increase as dificulty increases
-BONUS_EVENT_MIN = 4000
-BONUS_EVENT_MAX = 8000
+BONUS_EVENT_MIN = 8000
+BONUS_EVENT_MAX = 12000
 
 # after each level the player gets another life, this sets the maximum achievable
 MAX_LIVES = 6
@@ -274,6 +274,7 @@ class Game:
         # use a cached scaled image unless not loaded, otherwise render performance seriously suffers
         if self.background_image is not None:
             if self.background_image_scaled is None:
+                print("Background transform")
                 self.background_image_scaled = pygame.transform.scale(
                 self.background_image, screen.get_size())  # Optionally scale to fit screen
         screen.blit(self.background_image_scaled, (0, 0))
