@@ -273,7 +273,7 @@ class GameManager:
 
     def exit_game(self):
         print("Exiting game...")
-        self.game.game_over()
+        #self.game.game_over()
         self.save_game()
         pygame.quit()
         sys.exit()
