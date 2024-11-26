@@ -32,7 +32,7 @@ class GameData:
 
     def update_score(self, score):
         #self.score += score
-        self.score += score * (self.level - 1) // 3+1
+        self.score += score * (self.level - 1 ) // 3 + 1
         if self.score > self.high_score:
             self.high_score = self.score
 
