@@ -18,7 +18,7 @@ $ python3 main.py
 ```
 * Alternatively the HolidayInvaders.sh bash script will do the same as above in one command.
 ```
-chmod +x HolidayInvaders.sh
+$ chmod +x HolidayInvaders.sh
 $ ./HolidayInvaders.sh
 ```
 
