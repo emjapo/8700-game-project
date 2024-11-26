@@ -1,7 +1,7 @@
 # CPSC 8700
 # Fall 2024
-# Project
-#
+# Robert Taylor, Emily Port, Daniel Scarnavack
+# Final Project
 
 # This is a sample Python script.
 from game_manager import GameManager

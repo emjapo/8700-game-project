@@ -1,3 +1,9 @@
+# CPSC 8700
+# Fall 2024
+# Robert Taylor, Emily Port, Daniel Scarnavack
+# Final Project
+#
+
 from abc import ABC, abstractmethod
 from enemies.enemy import Enemy
 from hero import Hero

@@ -1,3 +1,10 @@
+# CPSC 8700
+# Fall 2024
+# Robert Taylor, Emily Port, Daniel Scarnavack
+# Final Project
+# Derived from https://github.com/educ8s/Python-Space-Invaders-Game-with-Pygame/tree/main
+#
+
 import pygame
 import os
 

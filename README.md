@@ -1,6 +1,29 @@
-# 8700-game-project
+# CPSC 8700 Final Game Project 
+## Fall 2024
 
-# Game Plan
+# Contributors:
+* Robert Taylor
+* Emily Port
+* Daniel Scarnavack
+
+# Execution
+* To excute Holiday Invaders the python3 and the pygame library are needed.
+* Depending on the local installation it may be best to run in a python virtual environment, venv.
+
+```
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ python3 -m pip install pygame
+$ python3 main.py
+```
+* Alternatively the HolidayInvaders.sh bash script will do the same as above in one command.
+```
+$ ./HolidayInvaders.sh
+```
+
+
+
+# Game Design
 
 The idea for the game is a shooter game that will have players shooting at different holiday enemies.
 
@@ -27,7 +50,7 @@ Sleigh Bells Sound Effect by GowlerMusic -- https://freesound.org/s/265458/ -- L
 HalloweenGhost.wav by sound_system11 -- https://freesound.org/s/591511/ -- License: Attribution 4.0
 
 # Code Attributions
-
+pygame tutorials played a key role in learning the framework.  Many thanks to the following.
 Pygame Tutorial with SpaceInvaders
 https://github.com/educ8s/Python-Space-Invaders-Game-with-Pygame/blob/main/README.md
 

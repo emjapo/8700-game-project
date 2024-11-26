@@ -1,3 +1,9 @@
+# CPSC 8700
+# Fall 2024
+# Robert Taylor, Emily Port, Daniel Scarnavack
+# Final Project
+#
+
 from halloween_factory import HalloweenFactory
 from thanksgiving_factory import ThanksgivingFactory
 from christmas_factory import ChristmasFactory
