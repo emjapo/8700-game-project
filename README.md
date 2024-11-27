@@ -1,7 +1,7 @@
 # CPSC 8700 Final Game Project 
 ## Fall 2024
 
-# Contributors:
+# Contributors
 * Robert Taylor
 * Emily Port
 * Daniel Scarnavack
